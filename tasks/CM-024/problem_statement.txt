@@ -1,0 +1,26 @@
+Link balloon displayed in wrong place for selection after a styled link
+## 📝 Provide detailed reproduction steps (if any)
+
+1.  Create a link like this: `<$text linkHref="aaa">foo</$text><$text linkHref="aaa" bold="true">bar</$text>[]`
+2.  Click the link toolbar button
+
+### ✔️ Expected result
+
+The link Baloon should appear close to the caret.
+
+### ❌ Actual result
+
+The link balloon appears in an incorrect place.
+
+![Image](assets/ckeditor__ckeditor5-8015/001.png)
+
+## 📃 Other details
+
+*   Browser: …
+*   OS: …
+*   CKEditor version: …
+*   Installed CKEditor plugins: …
+
+---
+
+If you'd like to see this fixed sooner, add a 👍 reaction to this post.

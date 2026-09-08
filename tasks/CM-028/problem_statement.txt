@@ -1,0 +1,33 @@
+Calling screenshot() on an element that changes sizes after scrolling throws 'is invalid for option "size"' exception
+<!-- Is this a question? Don't open an issue. Ask in our chat https://on.cypress.io/chat  -->
+
+### Current behavior:
+Using the screenshot command on an element that changes sizes after scrolling causes an exception to be thrown when trying to stitch them together.
+
+![Image](assets/cypress-io__cypress-7962/001.png)
+![Image](assets/cypress-io__cypress-7962/002.png)
+
+```
+RangeError: The value "-36960000" is invalid for option "size"
+    at Function.allocUnsafe (buffer.js:272:3)
+    at Jimp.cropQuiet (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/plugin-crop/dist/index.js:42:27)
+    at Jimp.<computed> [as crop] (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/core/dist/index.js:1266:23)
+    at crop (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:145:26)
+    at Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:209:22
+    at arrayEach (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/lodash/lodash.js:516:11)
+    at Function.forEach (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/lodash/lodash.js:9342:14)
+    at stitchScreenshots (Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:206:7)
+    at Library/Caches/Cypress/3.8.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:350:21
+    at processImmediate (internal/timers.js:439:21)
+```
+
+### Desired behavior:
+<!-- A clear concise description of what you want to happen -->
+
+The screenshot command should properly create an image instead of throwing an exception.
+
+### Steps to reproduce:
+See: https://github.com/Keysox/cypress-screenshot-issue
+
+### Versions
+Cypress: 3.8.1

@@ -1,0 +1,4 @@
+Square alignement issue in tooltip with custom font family
+There is no problem with the native default font but if you have a custom default font (in my case, "Noto sans"), square and label are not aligned in tooltip
+
+![image](assets/chartjs__Chart.js-8631/001.png)

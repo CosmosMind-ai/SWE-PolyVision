@@ -1,0 +1,49 @@
+Can't set the style on <div> using Styles dropdown
+## 📝 Provide detailed reproduction steps (if any)
+
+*   Add GHS configuration:
+
+```javascript
+htmlSupport: {
+                allow: [
+                    {
+                        name: /.*/,
+                        attributes: true,
+                        classes: true,
+                        styles: true
+                    }
+                ] 
+ }
+```
+
+*   Add Styles configuration:
+
+```javascript
+style: {
+   definitions: [
+      { name: 'Message: Success', element: 'div', classes: ['alert', 'alert-success'] },
+      { name: 'Message: Info', element: 'div', classes: ['info-boxalert', 'alert-info'] }
+   ]
+}
+```
+
+*   Call `editor.setData( '<div>Test</div>' )` and put the selection inside of it.
+*   Try to apply defined styles.
+
+### ✔️ Expected result
+
+_It's possible to apply styles to the element._
+
+### ❌ Actual result
+
+_It's impossible to apply styles to the element._
+
+## 📃 Other details
+
+Might be related - #12625.
+
+The same scenario works fine for the example `<section>` element.
+
+---
+
+If you'd like to see this fixed sooner, add a 👍 reaction to this post.

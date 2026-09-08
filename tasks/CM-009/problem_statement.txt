@@ -1,0 +1,21 @@
+[BUG] Retina scaling no longer working in 2.4.0 (master branch)
+Testing out the latest using the master branch (since I needed a new feature) and now my charts are twice as big and blurry.
+
+I believe it is related to [this commit](https://github.com/chartjs/Chart.js/commit/16bcd6adc579cb3deae16ea915680bc219924cdc).
+
+## Expected Behavior
+Using a width/height of 640x480, a canvas is created like so:
+```
+<canvas width="1280" height="960" style="display: block; width: 640px; height: 480px;"></canvas>
+```
+
+## Current Behavior
+With `responsive` set to `false`, the canvas is created as:
+```
+<canvas width="1280" height="960" style="display: block;"></canvas>
+```
+
+With `responsive` set to `true`, the canvas is created as:
+```
+<canvas width="2560" height="1920" style="display: block; width: 1280px; height: 960px;"></canvas>
+```

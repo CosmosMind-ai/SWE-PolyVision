@@ -1,0 +1,4 @@
+Boost module does not render areaspline in canvas
+The boost module does not boost areaspline, although it is supporting it internally.
+
+Example: https://jsfiddle.net/7ss4um2q/1/

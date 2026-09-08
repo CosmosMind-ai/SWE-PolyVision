@@ -1,0 +1,23 @@
+Line chart render yAxes error with number "0.6"
+I have to use chart.js version 2.7.1 and get the bug look like the title.
+Some thing wrong when library render label on y-axis with number "0.6". With that number he's always return me 0.6000000000000001 LOL.
+But i have a temporary bad solution for fix that.
+
+```
+yAxes: [{
+	ticks: {
+        fontColor: "white",
+	fontSize: 13,
+	beginAtZero: true,
+	callback: function(value, index, values) {
+		//TODO: need to remove check condition in future because bug of library.
+		//Chart js library render value on y-axis error with number 0.6, that always return 0.6000000000000001 for 0.6 "LOL"
+		if (value === 0.6000000000000001) {
+			return 0.6;
+		}
+	        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+}]
+```
+
+I hope u will fix that. Many thanks!

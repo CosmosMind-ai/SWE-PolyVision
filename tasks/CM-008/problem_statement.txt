@@ -1,0 +1,75 @@
+Padding inside the canvas with a line chart without scale
+Hello,
+How can i make the line graph stick to the exact border of the canvas ?
+I 've made a line graph without scales and there are always a gap between the left and the bottom borders of the canvas and the beginning of the charts... I try to play with the responsive and the maintainAspectRatio options without success...  here is my configuration .
+
+Thx
+
+```
+new Chart(ctx, {
+          // responsive: false,
+          type: 'line',
+          // maintainAspectRatio:false,
+          data: {
+            labels: labels,
+            datasets: [{
+              fill:true,
+              backgroundColor: "#47afbd",
+              data: data
+            }]
+          },
+          options: {
+            defaultFontSize:10,
+            animation:{
+              onProgress:function(){
+                if(self.$('#engagement-chart-wrap').hasClass('isLoading')){
+                  self.$('#engagement-chart-wrap').removeClass('isLoading');
+                }
+              }
+            },
+            legend: {
+              display: false
+            },
+            tooltips:{
+              enabled:false
+            },
+            elements:{
+              point:{
+                radius:0
+              }
+            },
+            scales: {
+
+              yAxes: [{
+
+                ticks :{
+                  display:false,
+                  padding:0
+                },
+                gridLines:{
+                  drawTicks:false,
+                  drawBorder:false
+                },
+                scaleLabel:{
+                  display:false
+                }
+
+              }],
+              xAxes: [{
+                ticks :{
+                  display:false,
+                  padding:0
+
+                },
+                gridLines:{
+                  display:false,
+                  drawTicks:false,
+                  drawBorder:false
+                }
+
+              }]
+            }
+
+          }
+        });
+```

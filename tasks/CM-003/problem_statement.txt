@@ -1,0 +1,12 @@
+Menu Show / Hide Change in Behavior in 0.14.4 vs 0.14.3
+### Current behavior
+
+I have a top navigation menu system that is all Ariakit.
+    
+ This works perfectly in 0.14.3, but in .4, I see the menus overlap awkwardly and show multiple at a time. I see that showOnHover is set to true, but they aren't coming down properly in 0.14.4.
+
+
+
+### Expected behavior
+
+Like it did in 0.14.3

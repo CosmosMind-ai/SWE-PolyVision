@@ -1,0 +1,50 @@
+Textbox w/ stroke width toDataUrl has slightly different offset compared to canvas
+<!--
+Thank you for contributing!
+
+Have a usage question?
+======================
+The issue tracker is only for bugs (with reproducible minimal test case) and feature requests, so please do the following if you have a question:
+
+- Read the tutorial: http://fabricjs.com/articles/
+- Read the docs: http://fabricjs.com/docs/
+- Explore demos: http://fabricjs.com/demos/
+- Look for/ask questions on StackOverflow: http://stackoverflow.com/questions/tagged/fabricjs
+- Ask on Google Group: https://groups.google.com/forum/#!forum/fabricjs
+
+
+Think you found a bug?
+======================
+The best bug report is a failing test in the repository as a pull request. Otherwise, please use the "BUG REPORT" template below.
+
+
+Have a feature request?
+=======================
+Remove the template from below and provide thoughtful commentary *and code samples* on what this feature means for your product. What will it allow you to do that you can't do today? How will it make current work-arounds straightforward? What potential bugs and edge cases does it help to avoid? etc.
+-->
+
+<!-- BUG TEMPLATE -->
+## Version
+
+1.6.2
+## Test Case
+
+http://jsfiddle.net/7dq9ucyb/2/
+
+Check the console of this jsfiddle to see the different calculated dimensions.
+## Steps to reproduce
+1. Create a textbox with stroke width of 0
+2. Call toDataURL on textbox
+3. The data URL image and the original textbox are positioned exactly the same relative to their top-left corners.
+4. Create the same textbox again but with stroke width of 8.
+5. Call toDataURL on textbox.
+## Expected Behavior
+
+The data URL and the canvas textbox match position exactly, relative to their respective top left corners.
+## Actual Behavior
+
+The data URL image and the textbox are positioned differently.  The textbox appears to be "offset" by a few pixels when compared to the image.
+
+In the below GIF, you can see the data URL image with a slightly darker background.  When the textbox is selected, it has a slightly lighter background.  This gif has the stroke width at 8.
+
+![text_stroke_offset](assets/fabricjs__fabric.js-2992/001.gif)

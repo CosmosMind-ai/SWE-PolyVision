@@ -1,0 +1,8 @@
+[2.7] Lost responsive after destroy recreate
+If some options have changed, I destroy the chart then create a new one.
+```
+if (chart) chart.destroy()
+chart = new Chart(...)
+```
+Since 2.7, the div which handle resize detection is removed but is not re-created. 
+No problem with the iframe in 2.6

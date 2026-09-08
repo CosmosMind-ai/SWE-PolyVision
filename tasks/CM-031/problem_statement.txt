@@ -1,0 +1,16 @@
+Detail Group crashing pages
+### Describe the Bug
+
+After upgrading to 10.7.0 some of my collections getting frozen in studio app, I discovered that If you have detail group inside detail group it's a problem, before it was all good, also no outside/console errors are visible, page simply freezing and then in few second browser tab crashes.
+
+### To Reproduce
+
+Create detail group and then create another detail group and drop inside the previous one.
+
+### Directus Version
+
+v10.7.0
+
+### Hosting Strategy
+
+Self-Hosted (Docker Image)

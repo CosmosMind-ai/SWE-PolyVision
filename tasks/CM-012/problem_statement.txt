@@ -1,0 +1,11 @@
+[BUG] Incorrect chart offset for yAxis labels
+## Expected Behavior
+Show full yAsix label.
+
+## Current Behavior
+Shows only the fractional part. 
+First off all Chart.js  calculation L1 width (in my case used longestText for all tick), but after that chart.js add several ticks. 
+[0, 1, 2, 3] => [0, 0.5, 1, 1.5, 2, 2.5, 3]
+
+## Steps to Reproduce (for bugs)
+[jsfiddle](https://jsfiddle.net/instant1100/4paj42f1/1/)

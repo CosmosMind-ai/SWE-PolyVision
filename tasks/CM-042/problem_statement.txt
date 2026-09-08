@@ -1,0 +1,23 @@
+Confusing interface and more
+<!-- Before creating an issue please make sure you are using the latest version and have checked for duplicate issues. -->
+
+#### Provide the steps to reproduce
+1. Run LH on <https://uk.wikibudgets.org/w/united-kingdom-budget-2015>
+
+#### What is the current behavior?
+The SEO section score is 100 points.
+The Crawling and Indexing says "robots.txt is valid", yet there is a red triangle icon with an exclamation mark. Why?
+The Content Best Practices section says "Document has a valid rel=canonical", yet there is a red triangle icon with an exclamation mark.
+
+#### What is the expected behavior?
+If something is ok or 100 point score I don't expect a red triangle icon with an exclamation mark.
+When I see a red triangle icon with an exclamation mark, I expect a rollover text or other explanation of what is wrong. 
+
+
+#### Environment Information
+* Affected Channels: <!-- CLI, Node, Extension, DevTools -->
+* Lighthouse version:
+* Node.js version:
+* Operating System:
+
+**Related issues**

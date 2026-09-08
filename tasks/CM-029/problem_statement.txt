@@ -1,0 +1,25 @@
+Cypress Doesn't Finish Typing Strings Before Continuing to Next Field
+### Current behavior:
+
+When typing a long string into an input field, such as an email address to login in our case, Cypress 3.5.0 appears to no longer type the entire string. It bails on typing the complete string after the period in the email and never completely types the string. For example, `test@webdomainhere.com` would be typed as `test@webdomainhere.` in our app, failing the login.
+
+I have also seen similar things with usernames using mixed case, such as `associateEnabled` would be typed as `associate`, stopping before the capital letter in the string.
+
+Due to this bug we have had to roll back to using Cypress 3.4.1, where this worked fine.
+
+Example screenshot showing a failed login in Cypress 3.5.0 where the email should've had 'com' typed after the period:
+
+![Screen Shot 2019-10-25 at 3 00 45 PM](assets/cypress-io__cypress-9254/001.png)
+
+### Desired behavior:
+
+Entire string passed to a cy.type() function should be typed into the input field.
+
+### Steps to reproduce: (app code and test code)
+
+Type a long string, such as a long email address into a form field and then move on to a password field with a .click() and see that the end of the first string isn't entered.
+
+### Versions
+Cypress v3.5.0 (v3.4.1 works fine, we have had to roll back)
+Mac OSX 10.14.6
+Electron 61 / Chrome 78

@@ -1,0 +1,4 @@
+Font baseline shift
+Is there a way to modify the vertical-alignment of the font itself? On my Mac all the fonts are shifted down a few pixels. This looks buggy...
+
+![bildschirmfoto 2016-09-29 um 16 42 33](assets/chartjs__Chart.js-6292/001.png)
