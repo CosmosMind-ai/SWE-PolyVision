@@ -1,0 +1,36 @@
+Menu Show / Hide Change in Behavior in 0.14.4 vs 0.14.3
+### Current behavior
+
+I have a top navigation menu system that is all Ariakit.
+    
+ This works perfectly in 0.14.3, but in .4, I see the menus overlap awkwardly and show multiple at a time. I see that showOnHover is set to true, but they aren't coming down properly in 0.14.4.
+
+
+
+### Expected behavior
+
+Like it did in 0.14.3
+
+### Workaround
+
+https://github.com/ariakit/ariakit/issues/4247#issuecomment-2506083953
+
+### Possible solutions
+
+I think this has something to do with the transition animation, which I set on my mui components to "unset" previously to stop this in earlier versions.
+
+![image](assets/ariakit__ariakit-4251/001.png)
+
+## Relevant pre-fix discussion
+
+### Issue #4247
+
+#### Comment at 2024-11-23T16:31:58Z
+
+I tried raking off all of the render props (which were using Mui ListItem and Mui/Buttons) and it still fails. I suspected that a Mui transition is deep in there. There is just something going on with the way they come down in .4.  I have a simple case where I loop and call menu.hide() on them and they just come down slowly and overlap.
+
+![image](assets/ariakit__ariakit-4251/002.png)
+
+#### Comment at 2024-11-24T13:44:33Z
+
+![image](assets/ariakit__ariakit-4251/003.png)

@@ -1,0 +1,19 @@
+{
+  "instance_id": "bpmn-io__bpmn-js-1442",
+  "repo": "bpmn-io/bpmn-js",
+  "base_commit": "f3394441ad73b84fdc23790556c4aadcdcbd4b82",
+  "environment_setup_commit": "f3394441ad73b84fdc23790556c4aadcdcbd4b82",
+  "created_at": "",
+  "version": "",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/bpmn-io__bpmn-js-1442/001.gif",
+      "assets/bpmn-io__bpmn-js-1442/002.gif",
+      "assets/bpmn-io__bpmn-js-1442/003.gif",
+      "assets/bpmn-io__bpmn-js-1442/004.gif"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

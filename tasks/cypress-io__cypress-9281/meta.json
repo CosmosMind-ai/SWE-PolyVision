@@ -1,0 +1,20 @@
+{
+  "instance_id": "cypress-io__cypress-9281",
+  "repo": "cypress-io/cypress",
+  "base_commit": "197f3097f7beaa09cd4dd1e2a0e9a39610f5ed69",
+  "environment_setup_commit": "197f3097f7beaa09cd4dd1e2a0e9a39610f5ed69",
+  "created_at": "",
+  "version": "",
+  "image_count": 5,
+  "image_assets": {
+    "problem_statement": [
+      "assets/cypress-io__cypress-9281/001.png",
+      "assets/cypress-io__cypress-9281/002.png",
+      "assets/cypress-io__cypress-9281/003.png",
+      "assets/cypress-io__cypress-9281/004.png",
+      "assets/cypress-io__cypress-9281/005.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

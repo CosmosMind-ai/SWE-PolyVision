@@ -1,0 +1,80 @@
+preview > decorators causes: "Rendered more hooks than during the previous render."
+**Describe the bug**
+When adding a decorator to `.storybook/preview.js` an error occurs: "Rendered more hooks than during the previous render."
+
+```
+Error
+Rendered more hooks than during the previous render.
+Call Stack
+ useHook
+  vendors~main.iframe.bundle.js:11148:13
+ useMemoLike
+  vendors~main.iframe.bundle.js:11175:18
+ useMemo
+  vendors~main.iframe.bundle.js:11187:10
+ withBackground
+  vendors~main.iframe.bundle.js:3858:106
+ undefined
+  vendors~main.iframe.bundle.js:11056:21
+ undefined
+  vendors~main.iframe.bundle.js:12992:12
+ undefined
+  vendors~main.iframe.bundle.js:12999:14
+ renderWithHooks
+  vendors~main.iframe.bundle.js:249128:18
+ mountIndeterminateComponent
+  vendors~main.iframe.bundle.js:251954:13
+ beginWork
+  vendors~main.iframe.bundle.js:253192:16
+```
+
+![Screen Shot 2021-06-13 at 15 10 48](assets/storybookjs__storybook-22336/001.png)
+
+
+**To Reproduce**
+Repro: TBD
+
+Add the following code to your `.storybook/preview.js`
+
+```
+export const decorators = [Story => <Story />];
+```
+
+
+**System**
+
+```
+  System:
+    OS: macOS 11.4
+    CPU: (16) x64 Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+  Binaries:
+    Node: 14.16.0 - ~/.nvm/versions/node/v14.16.0/bin/node
+    Yarn: 1.22.10 - /usr/local/bin/yarn
+    npm: 6.14.11 - ~/.nvm/versions/node/v14.16.0/bin/npm
+  Browsers:
+    Chrome: 91.0.4472.101
+    Firefox: 87.0
+    Safari: 14.1.1
+  npmPackages:
+    @storybook/addon-actions: ^6.2.9 => 6.2.9 
+    @storybook/addon-essentials: ^6.2.9 => 6.2.9 
+    @storybook/addon-links: ^6.2.9 => 6.2.9 
+    @storybook/react: ^6.2.9 => 6.2.9 
+```
+
+## Relevant pre-fix discussion
+
+### Issue #15223
+
+#### Comment at 2023-05-01T17:41:56Z
+
+Looks like I'm somewhat mistaken. The internal decorators use custom look-alike hooks, so Storybook is not intercepting the hooks from user-provided decorators and stories that use React hooks, but preview-api has it's own custom React-like hooks that the built-in decorators use. The problem appears to be with how the jsxDecorator works.
+Without our custom decorator the conditionally renders the story, these are the phases:
+
+![image](assets/storybookjs__storybook-22336/002.png)
+
+No errors, but also no UPDATE, only MOUNT. However, once our custom decorator is added, the biggest change is now the story has to go through the update phase, and the jsxDecorator gets out of sync. It never gets MOUNT called, but it gets UPDATE called twice at the end, and now we get the "Rendered more hooks" error:
+
+![image](assets/storybookjs__storybook-22336/003.png)
+
+jsxDecorator uses 1 hook, `useEffect`, but since it never got MOUNT and had the state saved off, when it gets to UPDATE it has no hooks registered and throws the error. It doesn't seem to matter that it got called twice at the end, the first call throws the error, the 2nd one also throws the error for good measure, but it appears having the conditional decorator interferes with jsxDecorator going through MOUNT, and causes it UPDATE to be a bit async compared to the others perhaps, as you will notice there are 2 sets of updates, and jsxDecorator doesn't participate in the first round, so I think it must get queued somehow, and then both of them drop at the very end.

@@ -1,0 +1,41 @@
+hoverlabel not working properly with subplots when resizing window
+There is something buggy going on with my subplots using x unified
+
+When creating the plot on its own, the hoverlabel is fine, but when I put it inside a dash app via dcc.Graph component, the labels don’t show. I created two versions in chart studio, one that is exported from the dash app and the second created using the `chart_studio` module.
+
+The latter works fine, but the former works initially, but then all but the last plot’s hover labels no longer work when the window is resized.
+
+Any idea what is going on here?
+
+Created using dash app via dcc.Graph: https://chart-studio.plotly.com/~mbkupfer/72/#/
+
+Created using chart_studio (works good): https://chart-studio.plotly.com/~mbkupfer/70/#plot
+
+Dependencies:
+
+```
+dash                      1.13.3
+dash-core-components      1.10.1
+dash-html-components      1.0.3
+dash-renderer             1.5.0
+dash-table                4.8.1
+plotly                    4.8.2
+```
+**[Update]**
+It actually looks like this issue occurs in both created plots.
+
+## Relevant pre-fix discussion
+
+### Issue #4971
+
+#### Comment at 2020-06-30T22:38:42Z
+
+> Looks like the expected behaviour to me.
+>> For the hover data to not show?
+>>> For the hover not to show across subplots.
+
+Oh, no...what I meant was that it simply didn't show. For example, in first screenshot, I get a unified hoverlabel on the first plot, but when I resize the window it no longer shows...all I get are the spikelines. The only subplot that shows hoverlabels at this point is the last one.
+
+![image](assets/plotly__plotly.js-4977/001.png)
+
+![image](assets/plotly__plotly.js-4977/002.png)

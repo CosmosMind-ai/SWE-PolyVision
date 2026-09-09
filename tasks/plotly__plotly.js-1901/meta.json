@@ -1,0 +1,18 @@
+{
+  "instance_id": "plotly__plotly.js-1901",
+  "repo": "plotly/plotly.js",
+  "base_commit": "b70ef1d7b482109cb6a85f83a4d4ca86093b9ab7",
+  "environment_setup_commit": "b70ef1d7b482109cb6a85f83a4d4ca86093b9ab7",
+  "created_at": "",
+  "version": "",
+  "image_count": 3,
+  "image_assets": {
+    "problem_statement": [
+      "assets/plotly__plotly.js-1901/001.png",
+      "assets/plotly__plotly.js-1901/002.png",
+      "assets/plotly__plotly.js-1901/003.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

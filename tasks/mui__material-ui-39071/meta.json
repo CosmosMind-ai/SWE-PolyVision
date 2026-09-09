@@ -1,0 +1,17 @@
+{
+  "instance_id": "mui__material-ui-39071",
+  "repo": "mui/material-ui",
+  "base_commit": "ba4c5596cdbbdf07e78cb10ca7231db9968812db",
+  "environment_setup_commit": "ba4c5596cdbbdf07e78cb10ca7231db9968812db",
+  "created_at": "",
+  "version": "",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/mui__material-ui-39071/001.png",
+      "assets/mui__material-ui-39071/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

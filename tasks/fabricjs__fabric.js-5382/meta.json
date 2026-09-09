@@ -1,0 +1,19 @@
+{
+  "instance_id": "fabricjs__fabric.js-5382",
+  "repo": "fabricjs/fabric.js",
+  "base_commit": "3af833930f7e043163a94c0426d17efa6f6def9f",
+  "environment_setup_commit": "3af833930f7e043163a94c0426d17efa6f6def9f",
+  "created_at": "2018-11-11T23:31:46Z",
+  "version": "v2.4.3",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/fabricjs__fabric.js-5382/001.png",
+      "assets/fabricjs__fabric.js-5382/002.png",
+      "assets/fabricjs__fabric.js-5382/003.png",
+      "assets/fabricjs__fabric.js-5382/004.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "instance_id": "chartjs__Chart.js-10766",
+  "repo": "chartjs/Chart.js",
+  "base_commit": "7410a3c30e5b06d91ccc6a621136c6b061ee9b5d",
+  "environment_setup_commit": "7410a3c30e5b06d91ccc6a621136c6b061ee9b5d",
+  "created_at": "",
+  "version": "",
+  "image_count": 3,
+  "image_assets": {
+    "problem_statement": [
+      "assets/chartjs__Chart.js-10766/001.png",
+      "assets/chartjs__Chart.js-10766/002.png",
+      "assets/chartjs__Chart.js-10766/003.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

@@ -1,0 +1,64 @@
+Fix hello-document support in shell-session language
+**Information:**
+- Prism version: 1.20.0
+- Plugins: none
+- Environment: Browser
+
+Does the latest version of Prism from the [download page](https://prismjs.com/download.html) also have this issue?
+
+yes
+
+**Description**
+
+First, thanks so much for Prism.
+
+Putting together the regular expressions to pull this off must be painstaking!
+
+Consider the following code block using the `shell-session` language.
+
+```
+$ cp /etc/ipsec.secrets /etc/ipsec.secrets.backup
+
+$ cat << "EOF" > /etc/ipsec.secrets
+: RSA vpn-server-a.key
+EOF
+
+$ cat << "EOF" > /etc/ipsec.secrets
+: RSA vpn-server-a.key
+# : RSA vpn-server-b.key
+EOF
+```
+
+Issues:
+
+- Everything after `cat` is part of the output token. I believe the above code block should render three command tokens with no output.
+
+- Lines that start with `#` (or `$`) inside hello-documents become new commands. I believe commands inside of hello-documents should be ignored as they are part of a parent command.
+
+See following screenshot.
+
+![here-document](assets/PrismJS__prism-2509/001.png)
+
+## Relevant pre-fix discussion
+
+### Issue #2503
+
+#### Comment at 2020-08-06T17:11:55Z
+
+@sunknudsen You mean like this, right?
+
+![image](assets/PrismJS__prism-2509/002.png)
+
+The problem is that our here doc strings assumed that there's nothing after the identifier.
+
+Is it correct to assume that every after the identifier (so e.g. `> /etc/ipsec.secrets` but not the lines below) is a command and not part of the string? I'm asking because, as you can see, bash isn't highlighting the strings correctly and I don't know the correct interpretation.
+
+#### Comment at 2020-08-06T19:42:33Z
+
+@RunDevelopment I am fairly new to here documents, but my gut feeling is only `cat` should be considered a command and everything else after it (including the delimiting identifier) a string.
+
+This is how it is illustrated on Wikipedia (see https://en.wikipedia.org/wiki/Here_document) and how Visual Studio Code handles it in markdown codeblocks and shell scripts (coloring the delimiting identifier is a nice addition).
+
+![here document markdown](assets/PrismJS__prism-2509/003.png)
+
+![here document sh](assets/PrismJS__prism-2509/004.png)

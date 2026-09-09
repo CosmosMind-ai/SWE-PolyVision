@@ -1,0 +1,56 @@
+Shrink width of Heading level 6 causes it to jump up in size
+<!--- Provide a general summary of the issue in the Title above -->
+See https://grommet.slack.com/archives/C09QQEG69/p1595361593434100?thread_ts=1595361593.434100&cid=C09QQEG69
+
+<!--- Tell us what should happen -->
+For h6 elements, shrinking page width should not cause the font size to increase.
+
+Thanks to Taylor Seamans for this explanation... (paraphrased)
+
+...this is likely a boundary condition.  As the pages shrinks and crosses breakpoints, the theme's heading sizes are reduced.  Since "6" is the smallest, it can't go any smaller and I noted finds some defa t size.
+
+### Actual Behavior
+
+Shrinking page width causes font size to increase.
+
+### URL, screen shot, or Codepen exhibiting the issue
+
+<!--
+  -- Here's a Codesandbox template that serves as a nice starting point
+  -- for demonstrating an issue: https://codesandbox.io/s/m7mml8l0zj
+  -->
+
+### Steps to Reproduce
+
+Start with component `<Heading level="6">Hello Grommet</Heading>`.  Now shrink the page below the breakpoint of 768 and the font size increases.
+
+### Your Environment
+
+<!--- Include as many relevant details about the environment you experienced the bug in -->
+
+- Grommet version: 2.14
+- Browser Name and version: Chrome
+- Operating System and version (desktop or mobile): Windows
+
+## Relevant pre-fix discussion
+
+### Issue #4332
+
+#### Comment at 2020-07-22T20:57:53Z
+
+Feel free to fill in the issue template for future issues, to drive more conversations and interactions with github users that aren't using slack.
+
+![image](assets/grommet__grommet-4402/001.png)
+
+#### Comment at 2020-08-10T19:13:23Z
+
+I could be wrong, but it looks like this might be intended behavior. This function handles the size.
+`const responsiveData = headingTheme.level[Math.min(props.level + 1, 4)][size];`
+
+![Screen Shot 2020-08-10 at 2 06 07 PM](assets/grommet__grommet-4402/002.png)
+
+The level here is the passed in heading level
+the number is what is calculated by Math.min
+and medium is the default font size.
+
+My question would be to @ShimiSun or @ericsoderberghp, is this intended behavior? It looks like any heading size lower than 4 will default to 4 when resizing.

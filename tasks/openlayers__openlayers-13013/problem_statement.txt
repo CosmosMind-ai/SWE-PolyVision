@@ -1,0 +1,46 @@
+Black tiles with DataTileSource and WebGLTileLayer
+**Describe the bug**
+
+The`ol.layer.WebGLTile` doesn't render data that were loaded with `ol.source.DataTile` using a custom tile grid:
+
+Extent: `[0, -23828, 23903, 0]`
+Sizes: `[[1, 1], [7, 7], [ 25, 25 ], [100, 100]]`
+Tile sizes: `[[770, 768], [240, 240], [240, 240], [240, 240]]`
+
+![Screen Shot 2021-11-12 at 10 00 32 PM](assets/openlayers__openlayers-13013/001.png)
+
+The following warning message gets logged:
+
+```
+WebGL warning: texImage: Desired upload requires more data than is available: (767 rows plus 770 pixels needed, 767 rows plus 258 pixels available)
+```
+
+I didn't previously experience this issue and wonder whether it may be due to either https://github.com/openlayers/openlayers/pull/11532 or https://github.com/openlayers/openlayers/pull/12024.
+
+**Expected behavior**
+
+Not sure whether this is a bug or whether my understanding of the tile grid is wrong.
+
+## Relevant pre-fix discussion
+
+### Issue #12995
+
+#### Comment at 2021-11-13T15:42:16Z
+
+> Does [770, 767] work? `770 * 767 + 258 = 577 * 1024` suggests the data has been truncated and the final row is not complete.
+
+The warning goes away, but the data still doesn't get rendered.
+
+I attached a listener to `tileloadend` and that is the output:
+
+![Screen Shot 2021-11-13 at 10 05 37 AM](assets/openlayers__openlayers-13013/002.png)
+
+The length of the data seems to be correct.
+
+What's interesting, however, is that there are additional tiles requested at coordinates `[0, -1, 0]` and `[0, 1, 0]` and the data for those tiles is `undefined`:
+
+![Screen Shot 2021-11-13 at 10 09 38 AM](assets/openlayers__openlayers-13013/003.png)
+
+The reason the data is `undefined` is because my loader returns `undefined` for tile coordinates that don't exist. However, if I instead return white tiles (i.e., create an empty array of the given size and fill all pixels with 255), the tiles are still rendered black.
+
+![Screen Shot 2021-11-13 at 10 41 37 AM](assets/openlayers__openlayers-13013/004.png)

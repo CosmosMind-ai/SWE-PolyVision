@@ -1,0 +1,17 @@
+{
+  "instance_id": "chartjs__Chart.js-3192",
+  "repo": "chartjs/Chart.js",
+  "base_commit": "b33aff20919ca65e7914aa368fb99961e36e89be",
+  "environment_setup_commit": "b33aff20919ca65e7914aa368fb99961e36e89be",
+  "created_at": "2016-08-23T00:10:25Z",
+  "version": "v2.2.1",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/chartjs__Chart.js-3192/001.png",
+      "assets/chartjs__Chart.js-3192/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

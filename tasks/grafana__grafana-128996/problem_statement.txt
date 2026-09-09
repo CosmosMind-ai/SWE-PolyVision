@@ -1,0 +1,42 @@
+[A11ySev2] [Screen reader-Dashboards with Grafana - New Dashboard- Data]: Screen reader announces incorrect total number of rows in the table under the data tab.
+## Steps to reproduce
+
+Repro Steps: 
+  
+1. Open 'Azure Monitor dashboards with Grafana' in Azure Portal
+2. "Monitor | Dashboards with Grafana | Gallery" screen appears with already Dashboards with Grafana tab selected.  
+3. Navigate to the all the controls available on Dashboards with Grafana blade like tool bar , controls under All Dashboards tab. 
+4. Navigate New menu present in the tool bar and select New Dashboard.  
+5. Navigate to "Add visualization" button and hit ENTER key. "Select data source" popup will appear. 
+6. Navigate to the TestData list item select it. 
+7. Navigate to the Query inspector control under Queries tab and select it. 
+8. Navigate all controls under Data , Stats tab. 
+9. Use a screen reader to navigate through the table rows and Observe the announced total number of rows when entering the table. 
+
+**Actual Result:**
+The screen reader announces the total number of rows as 11, even though the table contains more rows than this.  
+**Observation**:  
+The incorrect total row count may be caused by a missing or improperly updated aria-rowcount attribute on the table element. This attribute should dynamically update to reflect the actual number of rows in the table.  
+**Issue1**: Same issue repro for the table under the Explore pane.  
+**Navigation**: Open https://portal.azure.com/#view/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/~/AzureGrafanaReactView  > Select New button button > Invoke New dashboard control> Select “ Add visualization” button > Select testdata list item> Select Back to dashboard in the tool bar > Select Explore under the three dots menu button under the new panel> Observe the screen reader announces row 11 afer row 18 for Table section under the ‘Explore’ pane.  
+
+**Expected Result:**
+The screen reader should announce the correct total number of rows in the table. This can be achieved by programmatically updating the aria-rowcount attribute on the table element to reflect the actual number of rows dynamically.
+
+**Relevant WCAG Criteria:** [4.1.2 Name, Role, Value](https://www.w3.org/WAI/WCAG21/Understanding/name-role-value.html) (Level A)
+
+## Environment
+
+- **Grafana version:** 12.2.0
+- **Data source type & version:**
+- **User OS & Browser:** Version 25H2 (OS Build 26200.7093) / Chrome Version 142.0.7444.177 (Official Build) (64-bit)
+- **Others:**
+
+## Relevant pre-fix discussion
+
+### Issue #118774
+
+#### Comment at 2026-02-24T02:17:06Z
+
+![Image](assets/grafana__grafana-128996/001.png)
+![Image](assets/grafana__grafana-128996/002.png)

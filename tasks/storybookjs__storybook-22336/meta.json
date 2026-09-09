@@ -1,0 +1,18 @@
+{
+  "instance_id": "storybookjs__storybook-22336",
+  "repo": "storybookjs/storybook",
+  "base_commit": "3e32fc62fdb93c78bb5c4ee5ce76a10d1b4cb7b6",
+  "environment_setup_commit": "3e32fc62fdb93c78bb5c4ee5ce76a10d1b4cb7b6",
+  "created_at": "",
+  "version": "",
+  "image_count": 3,
+  "image_assets": {
+    "problem_statement": [
+      "assets/storybookjs__storybook-22336/001.png",
+      "assets/storybookjs__storybook-22336/002.png",
+      "assets/storybookjs__storybook-22336/003.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

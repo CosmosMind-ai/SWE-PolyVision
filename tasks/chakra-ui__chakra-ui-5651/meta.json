@@ -1,0 +1,18 @@
+{
+  "instance_id": "chakra-ui__chakra-ui-5651",
+  "repo": "chakra-ui/chakra-ui",
+  "base_commit": "d5807a4ef73baf0aa7687a144ca4a4474abe953b",
+  "environment_setup_commit": "d5807a4ef73baf0aa7687a144ca4a4474abe953b",
+  "created_at": "2022-02-23T22:54:03Z",
+  "version": "@chakra-ui/babel-plugin@1.0.2",
+  "image_count": 3,
+  "image_assets": {
+    "problem_statement": [
+      "assets/chakra-ui__chakra-ui-5651/001.png",
+      "assets/chakra-ui__chakra-ui-5651/002.png",
+      "assets/chakra-ui__chakra-ui-5651/003.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

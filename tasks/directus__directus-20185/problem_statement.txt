@@ -1,0 +1,53 @@
+Detail Group crashing pages
+### Describe the Bug
+
+After upgrading to 10.7.0 some of my collections getting frozen in studio app, I discovered that If you have detail group inside detail group it's a problem, before it was all good, also no outside/console errors are visible, page simply freezing and then in few second browser tab crashes.
+
+### To Reproduce
+
+Create detail group and then create another detail group and drop inside the previous one.
+
+### Directus Version
+
+v10.7.0
+
+### Hosting Strategy
+
+Self-Hosted (Docker Image)
+
+## Relevant pre-fix discussion
+
+### Issue #20145
+
+#### Comment at 2023-10-24T09:14:37Z
+
+I am using the raw group instead together with other grouping extensions (tabs). This is an example of what's causing the freeze on mine:
+
+![image](assets/directus__directus-20185/001.png)
+
+#### Comment at 2023-10-24T11:19:17Z
+
+> @paulvonber Would it be possible for you to share your data model? While I think I'm able to reproduce it in another way, it doesn't seem to trigger a freeze on my side when simply having a detail group inside another.
+
+so here is what I have:
+![image](assets/directus__directus-20185/002.png)
+
+All of the detail groups by default are "closed", so when I go to collection entry and try to open the very top parent one it crashes, if I take out those four details group out of the parent then all works as expected.
+If I set parent group by default to "opened" then I can't even enter item page it crashes in the collection list view (table page)
+
+#### Comment at 2023-10-24T14:36:39Z
+
+This is a new directus self hosted created using `pnpm dlx create-directus-extension@latest` therefore on v10.7.0
+
+So `rgroup_...` is `raw groups`, `dgroup_...` is `detail groups` in the image below?
+
+![image](assets/directus__directus-20185/003.png)
+
+the above works fine, but as soon as I move the raw group into the detail group then everything goes sideways:
+
+![image](assets/directus__directus-20185/004.png)
+
+#### Comment at 2023-10-24T14:40:18Z
+
+and raw groups takes more I think: 
+![image](assets/directus__directus-20185/005.png)

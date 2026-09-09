@@ -1,0 +1,141 @@
+[Select] Outlined component's label has no background fill (looks "strikethrough")
+Normally a textfield has a border. All select fields does not have topborder.
+
+- [x ] The issue is present in the latest release.
+- [x ] I have searched the [issues](https://github.com/mui-org/material-ui/issues) of this repository and believe that this is not a duplicate.
+
+## Current Behavior 😯
+Textfields have a border everywhere:
+![image](assets/mui__material-ui-40865/001.png)
+
+But select fields does not have a top-border:
+![image](assets/mui__material-ui-40865/002.png)
+
+## Expected Behavior 🤔
+Topborder also on select fields
+
+## Steps to Reproduce 🕹
+And that is a problem. I tried to reproduce this behavior, but I dont get this error it in codesandbox:
+[Codesandbox example](https://codesandbox.io/s/material-demo-forked-9psn4?file=/demo.tsx)
+
+The next strange thing is in codesandbox it is also not correct. In the codesandbox example the label "gender" is strikethrough.
+
+<details>
+Material-ui v5.0.0 beta 2
+</details>
+
+## Relevant pre-fix discussion
+
+### Issue #27533
+
+#### Comment at 2021-08-17T06:11:45Z
+
+@eps1lon 
+Can i pls add some more problems to this ticket:
+
+There is another codesandbox example:
+[Next example](https://codesandbox.io/s/material-demo-forked-ilgze)
+
+1. I changed my initial codesandbox example to the example on material-ui documentation page. But why do we have two labels?
+![image](assets/mui__material-ui-40865/003.png)
+
+2. Second problem: Now when you click on the select box the menuItems are not shown when you have a Select native.
+
+Thank you for the effort
+
+#### Comment at 2021-08-18T14:52:37Z
+
+I am also running into issues with the `label` prop on `Select` elements. 
+
+Issue 1: When I set a `label` prop, it doesn't show up in the output.
+![Screen Shot 2021-08-18 at 10 23 10 AM](assets/mui__material-ui-40865/004.png)
+
+Issue 2: When I use an `InputLabel`, the label appears struck-out:
+![Screen Shot 2021-08-18 at 10 56 54 AM](assets/mui__material-ui-40865/005.png)
+
+Code example:
+```
+const useStyles = makeStyles(theme => ({
+    formControl: {
+        minWidth: 120
+    }
+}));
+
+export const Base = () => {
+    const classes = useStyles();
+    return (
+        <FormControl className={classes.formControl} variant="outlined">
+            <InputLabel>My Label</InputLabel>
+            <Select onChange={action('change')}>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+            </Select>
+        </FormControl>
+    )
+};
+```
+
+Workaround: Using both a `label` prop _and_ an `InputLabel` appear to render something that looks good. I just think there is a better way out there somehow.
+![Screen Shot 2021-08-18 at 11 00 07 AM](assets/mui__material-ui-40865/006.png)
+
+Code:
+```
+const useStyles = makeStyles(theme => ({
+    formControl: {
+        minWidth: 120
+    }
+}));
+
+export const Base = () => {
+    const classes = useStyles();
+    return (
+        <FormControl className={classes.formControl} variant="outlined">
+            <InputLabel>My Label</InputLabel>
+            <Select label="My Label" onChange={action('change')}>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+            </Select>
+        </FormControl>
+    )
+};
+```
+
+Update: I see on the codesandbox of the reference documentation that both `InputLabel` element _and_ `label` prop on the `Select` are used to achieve the correct display. Kind of confusing!
+![Screen Shot 2021-08-18 at 11 02 03 AM](assets/mui__material-ui-40865/007.png)
+
+#### Comment at 2021-11-08T20:03:36Z
+
+I am having the same issue. Not sure what the work around is for this currently.
+
+![Screenshot 2021-11-08 140206](assets/mui__material-ui-40865/008.png)
+
+![Screenshot 2021-11-08 140147](assets/mui__material-ui-40865/009.png)
+
+#### Comment at 2021-12-14T10:29:12Z
+
+@michaldudak I must have forgotten to save the sandbox after editing. It's not fixed yet.
+![Screenshot 2021-12-14 at 11 28 37](assets/mui__material-ui-40865/010.png)
+.
+
+#### Comment at 2022-06-17T19:08:08Z
+
+In my case, I had to assign a label value to the `Select`'s input component as well...
+
+![Screenshot 2022-06-17 at 21 06 13](assets/mui__material-ui-40865/011.png)
+
+#### Comment at 2023-05-09T05:07:45Z
+
+Same problem here as [AlexanderHOtt](https://github.com/AlexanderHOtt): 
+![image](assets/mui__material-ui-40865/012.png)
+
+#### Comment at 2024-01-25T17:30:11Z
+
+anyone found the right solution for this yet? I've tried all the workarounds, but I don't get the desired result... The label is strikethrough if I don't select anything inside of it 
+how it looks:
+![image](assets/mui__material-ui-40865/013.png)
+how it should always look:
+![image](assets/mui__material-ui-40865/014.png)
+
+here's a code sandbox do demonstrate this behaviour: https://codesandbox.io/p/sandbox/material-ui-outlined-select-label-is-not-rendering-properly-forked-3nx92r - as you can see, when you set the select to be displayed empty, the label gets strikethrough until you click inside of it. does anyone know how to fix this? :|

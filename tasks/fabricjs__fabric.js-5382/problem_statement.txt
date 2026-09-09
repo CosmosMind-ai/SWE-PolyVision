@@ -1,0 +1,39 @@
+SVG isn't rendered properly
+<!-- BUG TEMPLATE -->
+## Version
+Kitchen Sink Version
+
+## Information about environment
+Chrome
+
+## Steps to reproduce
+Upload the SVG contents of the attached file ([swimming.svg.zip](https://github.com/fabricjs/fabric.js/files/2568853/swimming.svg.zip)) into the Kitchen Sink demo.
+
+## Expected Behavior
+It should look like this:
+![Image](assets/fabricjs__fabric.js-5382/001.png)
+
+## Actual Behavior
+It looks like this:
+![Image](assets/fabricjs__fabric.js-5382/002.png)
+
+## Relevant pre-fix discussion
+
+### Issue #5380
+
+#### Comment at 2018-11-11T15:42:26Z
+
+![image](assets/fabricjs__fabric.js-5382/003.png)
+
+ok this will be simple, but weird.
+I wonder who decided to use short lines with round caps to do 2 small circles.
+
+SVG are really interesting and a cool format, but people make SVG a pain.
+
+#### Comment at 2018-11-11T17:56:00Z
+
+![image](assets/fabricjs__fabric.js-5382/004.png)
+
+ok ok that was easy fix, and more generic that i thought.
+
+Pushing up PR

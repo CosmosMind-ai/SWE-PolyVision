@@ -1,0 +1,93 @@
+[Bug]: Combobox does not have `aria-invalid` attr
+### Package
+
+react
+
+### Package version
+
+8.120.5
+
+### React version
+
+16.14.0
+
+### Environment
+
+```shell
+System:
+    OS: Windows 11 10.0.22631
+    CPU: (16) x64 Intel(R) Core(TM) i9-10885H CPU @ 2.40GHz
+    Memory: 16.51 GB / 31.72 GB
+  Browsers:
+    Edge: Chromium (127.0.2651.86)
+    Internet Explorer: 11.0.22621.3527
+```
+
+### Current Behavior
+
+We are facing accessibility issues using the ComboBox control.
+This control is not setting an aria-invalid attribute corresponding to the presence of an error message set via errorMessage.
+You can check the render output and behavior here:
+https://developer.microsoft.com/en-us/fluentui#/controls/web/combobox
+
+If you check the same for a DropDown or TextField you can see, that these controls always set an aria-invalid attribute to either false or true:
+https://developer.microsoft.com/en-us/fluentui#/controls/web/dropdown
+https://developer.microsoft.com/en-us/fluentui#/controls/web/textfield
+
+### Expected Behavior
+
+All controls should consistently use the combination of aria-describedby, role="alert" and aria-invalid in order to let screen readers correctly react to error situations.
+For the ComboBox we built a workaround using autofill for setting aria-invalid at the inner input field depending on the presence of an error message for the time being.
+
+### Reproduction
+
+https://developer.microsoft.com/en-us/fluentui#/controls/web/combobox
+
+### Steps to reproduce
+
+1. Open https://developer.microsoft.com/en-us/fluentui#/controls/web/combobox
+2. In the page search for "ComboBox with static error message"
+3. Open the debugger and check the render output for the input field part of the ComboBox
+4. Notice that there is no aria-invalid="false" attribute
+5. Open https://developer.microsoft.com/en-us/fluentui#/controls/web/dropdown
+6. In the page search for "Dropdown with error message"
+7. Open the debugger and check the render output for the span part of the DropDown
+8. Switch the error on and off, notice that there is an aria-invalid attribute switched between true / false correspondingly
+
+### Are you reporting an Accessibility issue?
+
+yes
+
+### Suggested severity
+
+Medium - Has workaround
+
+### Products/sites affected
+
+_No response_
+
+### Are you willing to submit a PR to fix?
+
+no
+
+### Validations
+
+- [x] Check that there isn't already an issue that reports the same bug to avoid creating a duplicate.
+- [x] The provided reproduction is a minimal reproducible example of the bug.
+
+## Relevant pre-fix discussion
+
+### Issue #33490
+
+#### Comment at 2024-12-19T09:39:52Z
+
+## Combobox
+
+![Image](assets/microsoft__fluentui-33529/001.png)
+
+
+## Dropdown
+
+![Image](assets/microsoft__fluentui-33529/002.png)
+
+Looks like a bug, but I will let @smhigley to check 🐱

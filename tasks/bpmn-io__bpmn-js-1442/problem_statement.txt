@@ -1,0 +1,58 @@
+Pasting Multiple Shapes Onto Connection Results In Unexpected Connections
+__Describe the Bug__
+
+![J8DRVppIr9](assets/bpmn-io__bpmn-js-1442/001.gif)
+
+
+
+__Steps to Reproduce__
+
+1. Copy two tasks
+2. Paste the tasks onto a sequence flow
+
+__Expected Behavior__
+
+<!-- A clear and concise description of what you expected to happen. -->
+
+The [behavior](https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/modeling/behavior/DropOnFlowBehavior.js) doesn't kick in for multiple shapes __or__ it connects them in a way that _makes sense_.
+
+__Environment__
+
+ - Library version: 8.3.1
+
+## Relevant pre-fix discussion
+
+### Issue #1440
+
+#### Comment at 2021-04-30T11:08:33Z
+
+Root-Cause:
+
+The elements are added in order from left to right, but on the same Sequenz flow. Because of that, the second element comes first, see the gif below:
+![recording](assets/bpmn-io__bpmn-js-1442/002.gif)
+
+__Solution Ideas__
+I see two options:
+1. Add the Elements back-to-front.
+2. Determine the target-Flow again after each element is created
+
+However, both have Problems:
+1. I have made a draft implementation in the linked diagram-js PR. However, reversing the order in which the elements are added in the `CreateElementsHandler` makes assumptions about the structure of the arguments hand feels like a hack.
+__EDIT__: This will actually break the Nested elements, such as Participants/Sub-Processes. We would probably have to change the Tree-destructuring from https://github.com/bpmn-io/diagram-js/blob/master/lib/features/copy-paste/CopyPaste.js#L296
+2. The mouse event targets only one flow, so we do not have references to the next target flow. I'm not 100% sure if this approach can be achieve this without a bigger refactoring.
+
+@philippfromme , I'd be interested in your opinion on this. Would changing the order when copying the shapes (opposed to when creating the new ones) make this less hacky?
+
+#### Comment at 2021-04-30T12:08:07Z
+
+Honestly, I think we should disable this behavior when more than one shape is created. We simply cannot know what connections to create if we are creating multiple shapes at the same time. The behavior can also easily blow up completely:
+
+![yX9DFnWuCq](assets/bpmn-io__bpmn-js-1442/003.gif)
+
+The behavior was created at a time when only single elements could be created.
+
+#### Comment at 2021-04-30T12:11:28Z
+
+Moving the elements is rejected so pasting should be rejected, too:
+
+![O0Lj6CJnIq](assets/bpmn-io__bpmn-js-1442/004.gif)

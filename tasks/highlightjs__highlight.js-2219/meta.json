@@ -1,0 +1,17 @@
+{
+  "instance_id": "highlightjs__highlight.js-2219",
+  "repo": "highlightjs/highlight.js",
+  "base_commit": "5b413a6a243e279c40cda662362ad9095ef11d90",
+  "environment_setup_commit": "5b413a6a243e279c40cda662362ad9095ef11d90",
+  "created_at": "",
+  "version": "",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/highlightjs__highlight.js-2219/001.png",
+      "assets/highlightjs__highlight.js-2219/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

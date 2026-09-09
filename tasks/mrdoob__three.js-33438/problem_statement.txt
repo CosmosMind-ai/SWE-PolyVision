@@ -1,0 +1,98 @@
+SVGLoader: Shape generation breaks with large stroke width.
+### Description
+
+The original issue was reported at the forum: https://discourse.threejs.org/t/glitches-with-svg-loader/46803
+
+SVGs that exceed a certain `stroke-width` are not rendered correctly. As visible in the below screenshot, the resulting shape is rendered with additional triangles on its back side. When decreasing the stroke width (in the below SVG try 200), the issue goes away.
+
+ I suspect there is a problem in [SVGLoader.pointsToStrokeWithBuffers()](https://github.com/mrdoob/three.js/blob/4a6cf23c5f69ecde00e79171be7235deb39dff79/examples/jsm/loaders/SVGLoader.js#L2412) which generates triangles based on the stroke definition from the SVG.
+
+### Reproduction steps
+
+1. Load the following SVG with the loader to reproduce the glitch.
+```
+<?xml version="1.0"?>
+<svg viewBox="0 0 600 792" width="600" height="792">
+  <path stroke="#64C36E" fill="none" id="link_2_21_ok" d="M30,463.61904761904765C150,463.61904761904765,150,571.0476190476189,270,571.0476190476189" stroke-width="290" stroke-opacity="0.6"/>
+</svg>
+```
+
+### Code
+
+- See fiddles.
+
+### Live example
+
+* [jsfiddle-latest-release](https://jsfiddle.net/f5veyqst/2/)
+* [jsfiddle-dev](https://jsfiddle.net/f5veyqst/)
+
+
+### Screenshots
+
+![image](assets/mrdoob__three.js-33438/001.png)
+
+
+### Version
+
+r148
+
+### Device
+
+Desktop, Mobile, Headset
+
+### Browser
+
+Chrome, Firefox, Safari, Edge
+
+### OS
+
+Windows, MacOS, Linux, Android, iOS
+
+## Relevant pre-fix discussion
+
+### Issue #25326
+
+#### Comment at 2023-06-11T08:16:28Z
+
+@Mugen87 I've implemented your idea, by holding two contour points arrays (left and right ones) and combining them at the end, giving the full stroke contour.
+
+It works mostly correctly in the use case. I hoped it worked in the general case but you can see that the Tiger.svg has some artifacts. It is caused by the contour I generate, which folds over itself on some corners. Earcut does not like that on complex paths. As before, solving this would require checking self-intersections, but now in the linear contour, not in a triangle soup. It is doable, but only would work if the original path doesn't self-intersect.
+
+Detail of the contour folding over itself:
+
+![imagen](assets/mrdoob__three.js-33438/002.png)
+
+Tiger.svg:
+
+![imagen](assets/mrdoob__three.js-33438/003.png)
+
+Use case:
+
+![imagen](assets/mrdoob__three.js-33438/004.png)
+
+
+Use case detail:
+
+![imagen](assets/mrdoob__three.js-33438/005.png)
+
+
+The algorithm is smaller and cleaner (751 lines down to 495). Performance seems similar as before. The drawback is that the two contour arrays must be allocated. This can be optimized by providing reusable user arrays.
+
+As the whole ```pointsToStrokeWithBuffers()``` is modified, I don't know very well how to integrate this change. For now I've just duplicated the function with the name ```pointsToStrokeContourWithBuffers()```.
+
+The function ```pointsToStroke()``` accepts a boolean parameter ```useEarcut``` (default false) and selects which function to call.
+
+It seems ```THREE``` doesn't export ```Earcut``` so I've copied ```Earcut.js``` in ```/jsm``` just for testing.
+
+I've tried to make a live preview but failed. You can read the modified loader and example here: https://github.com/yomboprime/three.js/commit/563aea9172ada3e7dfa862e3125334415b40f336
+
+Expecting your feedback to see if this can be useful.
+
+#### Comment at 2023-06-18T23:21:11Z
+
+Unfortunately I've not been able to solve it for the general case. I've spent many hours on this.
+
+The problem is when the path points do auto-intersect like this (the contour gets flipped over itself):
+![contour_autointersection](assets/mrdoob__three.js-33438/006.png)
+
+I think this problem needs more thought than an amateur mathematician (me) can give.

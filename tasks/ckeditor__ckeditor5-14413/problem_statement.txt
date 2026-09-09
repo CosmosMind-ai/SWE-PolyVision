@@ -1,0 +1,78 @@
+Can't set the style on <div> using Styles dropdown
+## 📝 Provide detailed reproduction steps (if any)
+
+*   Add GHS configuration:
+
+```javascript
+htmlSupport: {
+                allow: [
+                    {
+                        name: /.*/,
+                        attributes: true,
+                        classes: true,
+                        styles: true
+                    }
+                ] 
+ }
+```
+
+*   Add Styles configuration:
+
+```javascript
+style: {
+   definitions: [
+      { name: 'Message: Success', element: 'div', classes: ['alert', 'alert-success'] },
+      { name: 'Message: Info', element: 'div', classes: ['info-boxalert', 'alert-info'] }
+   ]
+}
+```
+
+*   Call `editor.setData( '<div>Test</div>' )` and put the selection inside of it.
+*   Try to apply defined styles.
+
+### ✔️ Expected result
+
+_It's possible to apply styles to the element._
+
+### ❌ Actual result
+
+_It's impossible to apply styles to the element._
+
+## 📃 Other details
+
+Might be related - #12625.
+
+The same scenario works fine for the example `<section>` element.
+
+---
+
+If you'd like to see this fixed sooner, add a 👍 reaction to this post.
+
+## Relevant pre-fix discussion
+
+### Issue #13341
+
+#### Comment at 2023-05-04T14:13:56Z
+
+@wimleers requested I upload some screenshots from Drupal 9 + CKEditor 4 config vs. same config in CKE5 to demonstrate the basics of the issue. (We have plugins to make adding style dropdowns easier than writing the JS demonstrated in previous comments of this issue).
+
+I should note that the issue here isn't limited to DIV, but pretty much any block-level element appearing in the styles dropdown, like UL, OL, DL, TABLE, H1, H2, etc.  I havent done extensive testing on which block level items are affected.
+
+![Screen Shot 2023-05-01 at 1 41 04 PM](assets/ckeditor__ckeditor5-14413/001.png)
+
+I’ve explicitly allowed the `<div>` tag in the "manually editable tags" settings as well, but they’re still disabled in the dropdown even when cursor placed inside an empty `<div>` manually added in Source mode.
+
+![Screen Shot 2023-05-01 at 1 40 43 PM](assets/ckeditor__ckeditor5-14413/002.png)
+
+
+CKE4: 
+![Screen Shot 2023-05-01 at 1 39 21 PM](assets/ckeditor__ckeditor5-14413/003.png)
+
+
+CKE5:
+![Screen Shot 2023-05-01 at 1 39 02 PM](assets/ckeditor__ckeditor5-14413/004.png)
+
+I should note that one can still manually switch to Source mode, and enter the HTML code manually and it works.  Eg `<div class="alert success"> </div>`
+
+CKE5, with manual edits via src mode:
+![Screen Shot 2023-05-01 at 2 21 13 PM](assets/ckeditor__ckeditor5-14413/005.png)

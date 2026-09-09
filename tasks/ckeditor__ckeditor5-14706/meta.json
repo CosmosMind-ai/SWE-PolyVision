@@ -1,0 +1,30 @@
+{
+  "instance_id": "ckeditor__ckeditor5-14706",
+  "repo": "ckeditor/ckeditor5",
+  "base_commit": "6bbde59ef34a9aa2ce4613f50dff74f24dec7c8b",
+  "environment_setup_commit": "6bbde59ef34a9aa2ce4613f50dff74f24dec7c8b",
+  "created_at": "2023-08-01T15:50:15Z",
+  "version": "v39.0.1",
+  "image_count": 15,
+  "image_assets": {
+    "problem_statement": [
+      "assets/ckeditor__ckeditor5-14706/001.mp4",
+      "assets/ckeditor__ckeditor5-14706/002.mp4",
+      "assets/ckeditor__ckeditor5-14706/003.mp4",
+      "assets/ckeditor__ckeditor5-14706/004.png",
+      "assets/ckeditor__ckeditor5-14706/005.png",
+      "assets/ckeditor__ckeditor5-14706/006.png",
+      "assets/ckeditor__ckeditor5-14706/derived/001/frame-01.png",
+      "assets/ckeditor__ckeditor5-14706/derived/001/frame-02.png",
+      "assets/ckeditor__ckeditor5-14706/derived/001/frame-03.png",
+      "assets/ckeditor__ckeditor5-14706/derived/002/frame-01.png",
+      "assets/ckeditor__ckeditor5-14706/derived/002/frame-02.png",
+      "assets/ckeditor__ckeditor5-14706/derived/002/frame-03.png",
+      "assets/ckeditor__ckeditor5-14706/derived/003/frame-01.png",
+      "assets/ckeditor__ckeditor5-14706/derived/003/frame-02.png",
+      "assets/ckeditor__ckeditor5-14706/derived/003/frame-03.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

@@ -1,0 +1,360 @@
+API MARKDOWN ROUND-TRIP ISSUE FOR TABLES, INLINE CODE, AND LATEX
+### Is there an existing issue for this?
+
+- [x] I have searched the existing issues
+
+### This is not related to configuring Outline
+
+- [x] The issue is not related to self-hosting config
+
+### Current Behavior
+
+Short report:
+> When a document contains special Markdown formatting such as inline code, LaTeX/math, and pipe-containing expressions inside table cells, `documents.info` and `documents.update` may not be fully round-trip safe.
+Re-importing exported Markdown can change formatting, split table rows, leak content outside the table, or truncate the original content. The API export does not always appear to be a reliable re-import payload for the same document.
+
+## OBSERVED BEHAVIOR
+The problematic cases seem to appear when Markdown combines:
+
+- table cells
+- inline code formatting such as `` `...` ``
+- LaTeX/math blocks such as `$$...$$`
+- special characters such as `|`, `_`, `{`, `}`, and backticks
+
+Examples of failure modes observed through the API:
+
+1. A table cell containing expressions such as `` `|Clock_NTP_Camera1 - Clock_GPS_Camera1|` `` is not preserved exactly after API import/export.
+2. Math content containing pipe characters may be exported in one Markdown shape and then re-imported into a different internal structure.
+3. Re-importing Markdown through `documents.update` can split one logical table row into multiple fragments.
+4. Content that should stay inside a table cell can appear outside the table after re-import.
+5. Exact Markdown formatting is not preserved, even when the logical content is intended to remain unchanged.
+
+This seems especially relevant for technical documentation using:
+
+- formulas
+- code-like expressions
+- identifiers with underscores/braces
+- pipe-delimited expressions
+- tables combining prose and notation
+
+### Expected Behavior
+
+Ideally, the following would hold:
+
+1. `documents.info` would return Markdown that can be sent back through `documents.update` without changing the document structure unexpectedly.
+2. If Outline intentionally normalizes Markdown, that normalization would still preserve the exact document structure and content boundaries.
+3. Special formatting inside table cells would remain stable and would not truncate content, split rows, or leak nodes outside the table.
+
+### Steps To Reproduce
+
+Use a document containing a Markdown table with a cell that mixes prose and special formatting.
+
+Example input:
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Absolute time difference | The system checks `|Clock_NTP_Camera1 - Clock_GPS_Camera1|` and `|Clock_NTP_Camera2 - Clock_GPS_Camera2|`. |
+```
+
+Then:
+1. create or update the document through `documents.update`
+2. fetch it with `documents.info`
+3. send the fetched Markdown back again through `documents.update`
+4. fetch it once more
+
+Observed result:
+
+- the exported Markdown may no longer match the original input
+- replaying the exported Markdown may further alter the document
+- the table cell may be truncated or structurally split
+
+## IMPACT
+This makes reliable external tooling much harder for clients that sync Markdown to Outline through the public API.
+
+### Environment
+
+```markdown
+- Outline:
+- Browser:
+```
+
+### Anything else?
+
+_No response_
+
+## Relevant pre-fix discussion
+
+### Issue #12510
+
+#### Comment at 2026-05-29T16:25:31Z
+
+# VERIFICATION REPORT: MARKDOWN TABLE-CELL IMPORT ISSUE PARTIALLY PERSISTS
+
+## SUMMARY
+
+I verified the behavior against the locally deployed instance at:
+
+- `https://local.outline.dev:3000/`
+
+The result is:
+
+- **the issue is partially fixed, but not fully resolved**
+- the inline-code table case now renders correctly
+- the math-in-table case still renders incorrectly
+- the unescaped-math variant is even worse and gets truncated on import/export
+- exported Markdown appears stable on replay only after Outline has already normalized or corrupted the imported content
+
+In short:
+
+> The recent fix appears to improve replay stability and to fix the simple inline-code table case, but it does not fix the math-in-table failures: one variant renders incorrectly and another is truncated.
+
+## WHAT I TESTED
+
+I tested two Markdown table-cell patterns:
+
+1. inline code containing literal pipe characters
+2. math content containing escaped pipe characters, `<br>`, braces, underscores, and a trailing inline code span
+
+The checks were:
+
+1. create a document from the Markdown
+2. inspect the rendered result in the UI
+3. fetch the exported Markdown
+4. replay that exported Markdown through the API
+5. fetch the exported Markdown again and compare
+
+This separates two different questions:
+
+1. **does the document render correctly after import?**
+2. **is the exported Markdown stable when replayed?**
+
+Both matter, but render correctness is the primary user-facing requirement.
+
+## CASE 1: INLINE CODE WITH PIPE CHARACTERS INSIDE A TABLE CELL
+
+### Input Markdown
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Absolute time difference | The system checks `|Clock_NTP_Camera1 - Clock_GPS_Camera1|` and `|Clock_NTP_Camera2 - Clock_GPS_Camera2|`. |
+```
+
+### Expected Behavior
+
+The `Facts` cell should render as a single table cell containing prose and two inline code spans:
+
+- `` `|Clock_NTP_Camera1 - Clock_GPS_Camera1|` ``
+- `` `|Clock_NTP_Camera2 - Clock_GPS_Camera2|` ``
+
+The leading and trailing pipe characters should remain part of each code span.
+
+### Actual Behavior
+
+This case now renders correctly:
+
+- the code is still rendered as highlighted inline code
+- the pipe characters are preserved
+- the visual line breaks in the screenshot are consistent with normal wrapping inside a narrow table cell, not with a parsing error
+
+This case should therefore be treated as a **passing regression check**, not as an active repro.
+
+### Evidence
+
+Screenshots:
+
+![Image](assets/outline__outline-12569/001.png)
+![Image](assets/outline__outline-12569/002.png)
+
+## ACTIVE REPRO: MATH / LATEX WITH PIPE CHARACTERS INSIDE A TABLE CELL
+
+### Input Markdown
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Excessive absolute difference between primary and secondary time references | The system checks whether <br>$$\|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}\|$$<br> and $$\|Clock_{NTP_{Camera2}} - Clock_{GPS_{Camera2}}\|$$ remain below `Time_difference_treshold`. |
+```
+
+Which should render in .md:
+
+The system checks whether <br>$$|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}|$$<br> and $$|Clock_{NTP_{Camera2}} - Clock_{GPS_{Camera2}}|$$ remain below `Time_difference_treshold`.
+
+### Expected Behavior
+
+The `Facts` cell should render as a single table cell containing:
+
+- the prose text
+- the intended `<br>` line breaks
+- two intact math expressions
+- the final inline code span `` `Time_difference_treshold` ``
+
+At minimum, the imported result should preserve the intended meaning and structure of the cell content.
+
+### Actual Behavior
+
+This case is still broken:
+
+- the math is shown as raw `$$...$$` text rather than rendering correctly
+- the result is visibly different from the source Markdown intent
+- the import path is still unreliable for this content pattern
+
+### Evidence
+
+Screenshots:
+
+![Image](assets/outline__outline-12569/003.png)
+
+## ADDITIONAL NOTE: UNESCAPED PIPE CHARACTERS INSIDE `$$...$$` CAUSE TRUNCATION
+
+### Input Markdown
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Excessive absolute difference between primary and secondary time references | The system checks whether <br>$$|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}|$$<br> and $$|Clock_{NTP_{Camera2}} - Clock_{GPS_{Camera2}}|$$ remain below `Time_difference_treshold`. |
+```
+
+### Expected Behavior
+
+This should display as LaTeX inside the table cell and preserve the full sentence content.
+
+### Actual Behavior
+
+This variant fails more severely than the escaped version:
+
+- the imported content is truncated
+- the rendered cell stops at `The system checks whether $$`
+- the exported Markdown is already corrupted after the first import
+
+The first exported form was reduced to:
+
+```md
+| Condition | Facts |
+|-----------|-------|
+| Excessive absolute difference between primary and secondary time references | The system checks whether<br>$$ |
+```
+
+This means the API accepts the input, but the parser effectively treats the raw pipe inside `$$...$$` as a table delimiter and loses the rest of the cell content.
+
+### Evidence
+
+Screenshot:
+
+![Image](assets/outline__outline-12569/004.png)
+
+Unescaped math table truncation
+
+## IMPORT CORRECTNESS VS EXPORT STABILITY
+
+The verification shows that two properties need to be tracked separately:
+
+1. **import correctness**
+2. **export stability on replay**
+
+Current status:
+
+- case 1: import looks correct, export replay is stable
+- case 2: import is wrong, export replay is stable
+
+This means the recent fix appears to have improved the exporter / replay behavior and to have fixed the simpler inline-code case, but it has **not** fixed the remaining math-heavy table-cell case.
+
+## WHY THIS STILL MATTERS FOR SYNC CLIENTS
+
+This is still a real problem for external tooling that sends Markdown to the API.
+
+Practical consequences:
+
+- a sync push can still produce a visibly wrong document for valid Markdown
+- clients still cannot safely assume that math-heavy content inside table cells will survive import intact
+- technical documentation remains exposed because it often combines tables, formulas, identifiers, braces, underscores, and inline code
+
+So while the situation is better than before, the Markdown import path is still not reliable for the remaining repro pattern.
+
+## REMAINING HIGH-RISK PATTERN
+
+The remaining failed case combines:
+
+Markdown tables
+rich content inside a table cell
+LaTeX / math delimiters
+escaped pipe characters
+braces and underscores
+prose mixed with formatted content in the same cell
+This suggests the remaining bug is in or near the parsing / tokenization path for math-rich content inside table cells.
+
+## RECOMMENDED VERIFICATION CASES
+
+### Regression Check
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Absolute time difference | The system checks `|Clock_NTP_Camera1 - Clock_GPS_Camera1|` and `|Clock_NTP_Camera2 - Clock_GPS_Camera2|`. |
+```
+
+Expected result: renders correctly and remains stable on replay.
+
+### Active Repro
+
+```md
+| Condition | Facts |
+| --- | --- |
+| Excessive absolute difference between primary and secondary time references | The system checks whether <br>$$\|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}\|$$<br> and $$\|Clock_{NTP_{Camera2}} - Clock_{GPS_{Camera2}}\|$$ remain below `Time_difference_treshold`. |
+```
+
+Expected result after a full fix: renders correctly and remains stable on replay.
+
+Current observed result: replay is stable, but the rendered import is still wrong.
+
+## CONCLUSION
+
+**Verification result:** the issue is **partially fixed but still reproducible**.
+
+What appears fixed:
+
+- exported Markdown replay stability for the tested samples
+- the simple inline-code table-cell case
+
+What still fails:
+
+- the math-heavy table-cell import/render case
+
+Suggested conclusion to send back:
+
+> **Partially fixed, not fully resolved.** The local patch improves round-trip stability and fixes the simple inline-code case, but the math-in-table import/render bug still reproduces.
+
+#### Comment at 2026-06-01T09:52:14Z
+
+Hello Tom,
+Sorry to bother you again with that, but I believe that I have "nailed" down the "Table/LaTex" issue.
+This is, I believe important as this situation breaks a simple .md API export, even rendered in a regular GitHub flavoured md renderer.
+This has nothing to do with round-trip here.
+
+Here is the breakdown:
+A LaTex formula entered in Outline is automatically outputted via API in its **DISPLAY** form e.g.
+ $|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}|$ ->
+```
+$$
+|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}|
+$$
+```
+The issue is that this form is not valid in a table as encoding must follow these rules:
+-) Formulas must be encoded **INLINE**: `$$....$$` -> `$....$`;
+-) Because of INLINE, the `$` must directly surround the formula;
+-) Pipe character must be escaped (only in tables)
+
+Exemple:
+
+![Image](assets/outline__outline-12569/005.png)
+
+Comes out as:
+```
+| Excessive absolute difference between primary and secondary time references | $$
+|Clock_{NTP_{Camera1}} - Clock_{GPS_{Camera1}}|
+$$The system checks `\|Clock_NTP_Camera1 - Clock_GPS_Camera1\|` and `\|Clock_NTP_Camera2 - Clock_GPS_Camera2\|`. If either value exceeds `Time_difference_treshold`, the candidate is rejected. The default value of `Time_difference_treshold` is **1000 ms**. |
+```
+Which doesn't show correctly in VSCode:
+
+![Image](assets/outline__outline-12569/006.png)

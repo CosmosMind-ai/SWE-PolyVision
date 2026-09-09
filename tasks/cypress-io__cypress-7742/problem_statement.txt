@@ -1,0 +1,177 @@
+cy.wait() does not resolve when the XHR contains static resource-like text in the XHR's query params or hash (like `.js`, `.html`, `.css`)
+### Current behavior:
+
+Discovered this while trying to test for ad requests for my employer. When a URL with file extension, like .html, and a question mark (for a query string parameter) is visited, the request that is listened for is no longer detected. Remove the question mark, and the request is detected.
+
+### Desired behavior:
+
+Before promoting a build in production, we test the build using a query-string parameter, so the wish is for this to work when a query-string parameter is present in the visited URL.
+
+### Test code to reproduce
+
+```js
+describe("Oregon Live Ads", () => {
+  it("test cy.route()", () => {
+    cy.viewport(1500, 1024);
+
+    Cypress.on('uncaught:exception', () => {
+      return false;
+    });
+
+    cy.server();
+
+    cy.route({
+      url: /gampad\/ads\?/,
+    }).as("waitForAd");
+
+    cy.visit(
+      "https://www.oregonlive.com/news/2019/12/vaping-related-lung-illness-epidemic-has-likely-peaked-feds-say.html"
+      , {qs: {answer: "42"}}  // When this is commented out, the test passes.
+    );
+
+    cy.wait("@waitForAd").then((req) => {
+      expect(true).to.equal(true);
+    });
+  });
+});
+```
+### Versions
+
+<!-- Cypress, operating system, browser -->
+Cypress Version: Cypress 4.2.0
+OS: MacOS Catalina 10.15.2
+Browser: Default Chrome browser that is built into Cypress
+
+## Relevant pre-fix discussion
+
+### Issue #7280
+
+#### Comment at 2020-05-11T11:30:21Z
+
+Comparing the screenshots of commands when the test fails versus passes shows that the request for the `gampad/ads` XHR is not made when the site is visited with query params present.
+
+Have you checked that this behavior actually works within the website (outside of Cypress) when query params are present?
+
+*with query params*
+
+![Screen Shot 2020-05-11 at 5 53 47 PM](assets/cypress-io__cypress-7742/001.png)
+
+*without query params*
+
+![Screen Shot 2020-05-11 at 5 54 07 PM](assets/cypress-io__cypress-7742/002.png)
+
+#### Comment at 2020-05-11T14:27:09Z
+
+> Comparing the screenshots of commands when the test fails versus passes shows that the request for the `gampad/ads` XHR is not made when the site is visited with query params present.
+> 
+> Have you checked that this behavior actually works within the website (outside of Cypress) when query params are present?
+> 
+> _with query params_
+> 
+> ![Screen Shot 2020-05-11 at 5 53 47 PM](assets/cypress-io__cypress-7742/001.png)
+> 
+> _without query params_
+> 
+> ![Screen Shot 2020-05-11 at 5 54 07 PM](assets/cypress-io__cypress-7742/002.png)
+
+@jennifer-shehane, yes, when visiting the URL with query params, the request for ads is still an XHR request w/ `gampad/ads` in the route.
+
+![image](assets/cypress-io__cypress-7742/003.png)
+
+#### Comment at 2020-05-29T22:13:46Z
+
+Just to rule out the possibility that something within my employer's articles might be causing an issue, the same test was run against CNN.com and BBC.com articles, and the results are the same.
+
+When the same test is run against a CNN article, because CNN uses an html file extension in their content URLs, if a query string is present, ad requests are not detected.  When the query string is removed, the ad requests are detected.
+
+With Query String
+![image](assets/cypress-io__cypress-7742/004.png)
+
+```js
+describe("CNN Ads", () => {
+  it("test cy.route()", () => {
+    cy.viewport(1500, 1024);
+
+    Cypress.on('uncaught:exception', () => {
+      return false;
+    });
+
+    cy.server();
+
+    cy.route({
+      url: /gampad\/ads\?/,
+    }).as("waitForAd");
+
+    cy.visit(
+      "https://www.cnn.com/2020/05/29/politics/george-floyd-protests-american-racism/index.html"
+      , {qs: {answer: "42"}}  // When this is removed, the test passes.
+    );
+
+    cy.wait("@waitForAd").then((req) => {
+      expect(true).to.equal(true);
+    });
+  });
+});
+```
+
+The same CNN article is tested without a query string and the test passes.
+![image](assets/cypress-io__cypress-7742/005.png)
+
+```js
+describe("CNN Ads", () => {
+  it("test cy.route()", () => {
+    cy.viewport(1500, 1024);
+
+    Cypress.on('uncaught:exception', () => {
+      return false;
+    });
+
+    cy.server();
+
+    cy.route({
+      url: /gampad\/ads\?/,
+    }).as("waitForAd");
+
+    cy.visit(
+      "https://www.cnn.com/2020/05/29/politics/george-floyd-protests-american-racism/index.html"
+    );
+
+    cy.wait("@waitForAd").then((req) => {
+      expect(true).to.equal(true);
+    });
+  });
+});
+```
+
+
+The BBC does not have an html file extension in their URLs, so the test passes regardless of whether or not a query parameter is present.
+
+![image](assets/cypress-io__cypress-7742/006.png)
+
+
+```js
+describe("BBC Ads", () => {
+  it("test cy.route()", () => {
+    cy.viewport(1500, 1024);
+
+    Cypress.on('uncaught:exception', () => {
+      return false;
+    });
+
+    cy.server();
+
+    cy.route({
+      url: /gampad\/ads\?/,
+    }).as("waitForAd");
+
+    cy.visit(
+      "https://www.bbc.com/news/world-middle-east-52847175"
+      , {qs: {answer: "42"}}  // The test passes for the BBC with and without this line of code.
+    );
+
+    cy.wait("@waitForAd").then((req) => {
+      expect(true).to.equal(true);
+    });
+  });
+});
+```

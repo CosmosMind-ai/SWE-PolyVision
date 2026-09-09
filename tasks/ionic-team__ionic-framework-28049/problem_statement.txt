@@ -1,0 +1,93 @@
+bug: menu button cannot find menu if menu is moved in DOM
+### Prerequisites
+
+- [X] I have read the [Contributing Guidelines](https://github.com/ionic-team/ionic-framework/blob/main/.github/CONTRIBUTING.md#creating-an-issue).
+- [X] I agree to follow the [Code of Conduct](https://ionicframework.com/code-of-conduct).
+- [X] I have searched for [existing issues](https://github.com/ionic-team/ionic-framework/issues) that already report this problem, without success.
+
+### Ionic Framework Version
+
+v7.x
+
+### Current Behavior
+
+`ion-menu-button` not showing anymore
+
+### Expected Behavior
+
+`ion-menu-button` show display
+
+### Steps to Reproduce
+
+upgrade from `7.2.4` to `7.3.0`
+
+### Code Reproduction URL
+
+_No response_
+
+### Ionic Info
+
+```
+Ionic:
+
+   Ionic CLI                     : 7.1.1 
+   Ionic Framework               : @ionic/angular 7.3.0
+   @angular-devkit/build-angular : 15.2.9
+   @angular-devkit/schematics    : 15.2.9
+   @angular/cli                  : 15.2.9
+   @ionic/angular-toolkit        : 9.0.0
+
+Capacitor:
+
+   Capacitor CLI      : 5.2.3
+   @capacitor/android : 5.2.3
+   @capacitor/core    : 5.2.3
+   @capacitor/ios     : 5.2.3
+
+Utility:
+
+   cordova-res : 0.15.4
+   native-run  : 1.7.2
+
+System:
+
+   NodeJS : v16.14.0
+   npm    : 8.3.1
+   OS     : macOS Unknown
+```
+
+### Additional Information
+
+_No response_
+
+## Relevant pre-fix discussion
+
+### Issue #28030
+
+#### Comment at 2023-08-20T15:06:58Z
+
+Hello,
+
+I have upgraded my ionic framework to 7.3.0 and the component ion-menu-button is showed as you can see in the screenshot below:
+![ion-menu-button](assets/ionic-team__ionic-framework-28049/001.png)
+
+Could you please provide more information to reproduce the issue ?
+
+Thank you.
+
+#### Comment at 2023-08-21T17:14:59Z
+
+@Abdelhafid01 I'm struggling to reproduce the issue on a new project and the images below are probably not very helpful but something definitely changed
+
+v7.2.4
+![7 2 4](assets/ionic-team__ionic-framework-28049/002.gif)
+
+
+v7.3.0
+![7 3 0](assets/ionic-team__ionic-framework-28049/003.gif)
+
+
+But I noticed something on 7.3.0, if I navigate back and forth again on the browser, the icon reappears. something I can't do on iOS, and because the button to navigate back is on the ion-menu 
+![7 3 0 -](assets/ionic-team__ionic-framework-28049/004.gif)
+
+Sorry if this is not very helpful

@@ -1,0 +1,41 @@
+[BUG] Retina scaling no longer working in 2.4.0 (master branch)
+Testing out the latest using the master branch (since I needed a new feature) and now my charts are twice as big and blurry.
+
+I believe it is related to [this commit](https://github.com/chartjs/Chart.js/commit/16bcd6adc579cb3deae16ea915680bc219924cdc).
+
+## Expected Behavior
+Using a width/height of 640x480, a canvas is created like so:
+```
+<canvas width="1280" height="960" style="display: block; width: 640px; height: 480px;"></canvas>
+```
+
+## Current Behavior
+With `responsive` set to `false`, the canvas is created as:
+```
+<canvas width="1280" height="960" style="display: block;"></canvas>
+```
+
+With `responsive` set to `true`, the canvas is created as:
+```
+<canvas width="2560" height="1920" style="display: block; width: 1280px; height: 960px;"></canvas>
+```
+
+## Relevant pre-fix discussion
+
+### Issue #3575
+
+#### Comment at 2016-11-09T21:24:32Z
+
+Any example should do the trick (such as using the [Getting Started](http://www.chartjs.org/docs/#getting-started-creating-a-chart) example in the documentation). I would put together a JSFiddle but I don't think I can have it use 2.4.0 since it isn't released yet. If this is possible, let me know and I certainly will!
+
+But here are a couple screenshots:
+
+Using 400x400 with responsive set to false:
+
+![responsive-false](assets/chartjs__Chart.js-3584/001.png)
+
+With responsive set to true:
+
+![responsive-true](assets/chartjs__Chart.js-3584/002.png)
+
+Both charts appear as 800x800 and are twice as big as they should be.

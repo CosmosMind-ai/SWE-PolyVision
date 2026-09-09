@@ -1,0 +1,18 @@
+{
+  "instance_id": "microsoft__vscode-321227",
+  "repo": "microsoft/vscode",
+  "base_commit": "fc8f90cdb7b4b5c8446d6e5212021c8a19d87163",
+  "environment_setup_commit": "fc8f90cdb7b4b5c8446d6e5212021c8a19d87163",
+  "created_at": "",
+  "version": "",
+  "image_count": 3,
+  "image_assets": {
+    "problem_statement": [
+      "assets/microsoft__vscode-321227/001.png",
+      "assets/microsoft__vscode-321227/002.png",
+      "assets/microsoft__vscode-321227/003.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

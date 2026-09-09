@@ -1,0 +1,90 @@
+issue: "isDirty" and "dirtyFields" work incorrectly after calling "reset" or "setValue"
+### Version Number
+
+7.17.2
+
+### Codesandbox/Expo snack
+
+https://codesandbox.io/s/elegant-goldberg-ebrms
+
+### Steps to reproduce
+
+1st Use Case
+1. Go to https://codesandbox.io/s/elegant-goldberg-ebrms
+2. Click on 'SET VALUE' button
+3. See `isDirty === false` and `dirtyFields` is empty
+
+2nd Use Case
+1. Go to https://codesandbox.io/s/elegant-goldberg-ebrms
+2. Click on 'SET VALUE' button
+3. Change Text field
+4. See `isDirty === true` and `dirtyFields === {"text":true}`
+
+3rd Use Case
+1. Go to https://codesandbox.io/s/elegant-goldberg-ebrms
+2. Click on 'RESET' button
+3. See `isDirty === false` and `dirtyFields` is empty
+
+4rd Use Case
+1. Go to https://codesandbox.io/s/elegant-goldberg-ebrms
+2. Click on 'RESET' button
+3. Change Text field
+4. See `isDirty === true` and `dirtyFields === {"text":true}`
+
+### Expected behaviour
+
+1st Use Case
+`isDirty` should be `true` and `dirtyFields` should contain both fields
+
+2nd Use Case
+`isDirty` should be `true` and `dirtyFields` should contain both fields
+
+3rd Use Case
+`isDirty` should be `true` and `dirtyFields` should contain both fields
+
+4th Use Case
+`isDirty` should be `true` and `dirtyFields` should contain both fields
+
+Explanation: in all use cases the values are different from the default values, so the `isDirty` flag should be set to `true` and `dirtyFields` should contain all the fields that a different from the default values.
+
+I believe this issue relates to the recently closed issue https://github.com/react-hook-form/react-hook-form/issues/6721 and the related discussion https://github.com/react-hook-form/react-hook-form/discussions/6710
+
+### What browsers are you seeing the problem on?
+
+Chrome
+
+### Relevant log output
+
+_No response_
+
+### Code of Conduct
+
+- [X] I agree to follow this project's Code of Conduct
+
+## Relevant pre-fix discussion
+
+### Issue #6764
+
+#### Comment at 2021-10-11T23:06:05Z
+
+case 1 and 2
+
+Did you miss the following for `shouldDirty`?
+
+![Screen Shot 2021-10-12 at 10 05 49 am](assets/react-hook-form__react-hook-form-6774/001.png)
+
+case 4
+
+- you should consider providing a `defualtValues` for the reset state without react hook form would refer to the original `defaultValues`.
+
+```tsx
+<Button
+  variant="contained"
+  onClick={() => {
+    formMethods.reset(); // equal defaultValues
+  }}
+>
+  Reset defaults
+</Button>
+```
+![Screen Shot 2021-10-12 at 10 10 47 am](assets/react-hook-form__react-hook-form-6774/002.png)

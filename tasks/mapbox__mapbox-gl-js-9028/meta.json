@@ -1,0 +1,20 @@
+{
+  "instance_id": "mapbox__mapbox-gl-js-9028",
+  "repo": "mapbox/mapbox-gl-js",
+  "base_commit": "4e12ca76c45ef3923456f6245fb4565674fdf44f",
+  "environment_setup_commit": "4e12ca76c45ef3923456f6245fb4565674fdf44f",
+  "created_at": "2019-11-26T20:15:31Z",
+  "version": "v1.1.1",
+  "image_count": 5,
+  "image_assets": {
+    "problem_statement": [
+      "assets/mapbox__mapbox-gl-js-9028/001.png",
+      "assets/mapbox__mapbox-gl-js-9028/002.png",
+      "assets/mapbox__mapbox-gl-js-9028/003.png",
+      "assets/mapbox__mapbox-gl-js-9028/004.png",
+      "assets/mapbox__mapbox-gl-js-9028/005.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

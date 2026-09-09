@@ -1,0 +1,50 @@
+minBarLength Stacked bar chart not working
+Hello there,
+
+This is an old annoying bug, that still exists in latest version, the minBarLength doesn't work as expected in case of Stacked bar,
+the minBarLength doesn't apply to each dataset, but instead it applies to the whole bar, which cause overlapping, between bars.
+
+Please fix this, it's really unusable for many usecases.
+
+You'll find bellow a reference with the illustrated problem.
+
+Thank you for your hard work.
+
+
+=======================================
+_Originally posted by @tomzag in https://github.com/chartjs/Chart.js/issues/5741#issuecomment-750866201_
+========================================
+
+There seems to be a problem with stacked bar charts.
+
+Here for example a horizontal stacked bar chart:
+![Bildschirmfoto 2020-12-24 um 13 14 44](assets/chartjs__Chart.js-10766/001.png)
+
+The `minBarLength` works but the stacked version isn't respecting it and the bars overlap.
+
+## Relevant pre-fix discussion
+
+### Issue #10664
+
+#### Comment at 2022-10-04T09:00:13Z
+
+> Hi @nabenzine, would you please kindly share a minimal chart configuration to reproduce this issue? I would like to see if I can help fix this problem!
+
+Hi @Kit-p, thank you for your message, I am a bit hopeless, I created a codesandbox that illustrate the problem [codesandbox](https://codesandbox.io/s/chartjs-stacked-bars-forked-7cqu7v)
+
+![image](assets/chartjs__Chart.js-10766/002.png)
+
+Thank you in advance !
+
+#### Comment at 2022-10-06T20:16:39Z
+
+> @nabenzine I have made some progress in this. Here is a [codesandbox](https://codesandbox.io/s/chartjs-stacked-bars-forked-40bu32) with my version of Chart.js.
+> 
+> I would appreciate if you could help play around with it and report any problem you notice, thank you!
+
+That's amazing, thank you very much, It's seems to work fine except for label, I couldn't make them work as usual with the **chartjs-plugin-datalabels**
+
+![image](assets/chartjs__Chart.js-10766/003.png)
+
+Labels are not centered as in my initial codesandbox, maybe I am doing something wrong, Here is the 
+[codesandbox](https://codesandbox.io/s/chartjs-stacked-bars-forked-zh5y6t)

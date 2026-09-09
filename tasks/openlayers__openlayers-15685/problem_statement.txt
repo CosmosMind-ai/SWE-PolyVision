@@ -1,0 +1,85 @@
+Problem with setFill() for styling VectorTile
+In ol@9.1.0 when I am creating new ol.layer.VectorTile({}) and styling it, I am having issue with setFill() which makes additional semitransparent layer at the top of the other layers.
+
+Steps to reproduce the behavior:
+
+1. Use style 
+    ```js
+      let selectionStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          text: text,
+          overflow: true,
+          font: `12px sans-serif`,
+          padding: [5, 10, 5, 10],
+          textAlign: 'center',
+          justify: 'center',
+          textBaseline: 'middle',
+          fill: new ol.style.Fill({
+            color: '#fff',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: '#454545',
+          }),
+          backgroundStroke: new ol.style.Stroke({
+            color: '#fff',
+            width: 1,
+          }),
+        }),
+        stroke: new ol.style.Stroke({
+          color: '#000',
+          width: 2,
+        }),
+        fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.5)' }),
+      });
+    ```
+2. Create layer
+    ```js
+      const myLayer = new ol.layer.VectorTile({
+        properties: { name:'Test' },
+        visible: true,
+        renderMode: 'vector',
+        source: new ol.source.VectorTile({
+          format: new ol.format.MVT({
+            idProperty: 'id',
+          }),
+          tileLoadFunction: ...,
+          url: `some_url`,
+        }),
+        style: selectionStyle,
+      });
+    ```
+3. **If I remove fill** from the style **it will be ok** and without that additional layer but I need Fill to style myLayer
+
+If I use
+```js
+        selectionStyle.setFill(
+          new ol.style.Fill({
+            color: 'rgba(252, 220, 215, 0.5)'
+          })
+        );
+```
+it will as well make that additional ghost layer on some VectorTiles. Additionally on the web side, on mouse hover will cause map to flicker when moving cursor around.
+
+**Expected behavior**
+Fill in Style should Fill VectorTile and should not create any additional layers above. Please check notes on attached image. 
+
+
+![Screenshot 2024-03-28 at 12 09 07](assets/openlayers__openlayers-15685/001.png)
+
+## Relevant pre-fix discussion
+
+### Issue #15681
+
+#### Comment at 2024-03-28T18:13:34Z
+
+Check image and try this code. Zoom 3-4 times and move to Spain for example. Line 45 paint countries to red color, but also render on some text labels some ghost boxes. If you remove that line (fill: new Fill({color: 'rgba(252, 220, 215, 0.5)'}),) boxes disappears but countries are not filled with color. :(
+
+https://codesandbox.io/p/sandbox/vector-tile-selection-forked-2l6llr
+
+![Screenshot 2024-03-28 at 7 11 41 PM](assets/openlayers__openlayers-15685/002.png)
+
+If you move map you will notice some labels have those ghost boxes and that is random, not everywhere.
+
+![Screenshot 2024-03-28 at 7 20 31 PM](assets/openlayers__openlayers-15685/003.png)
+
+This is not just cosmetic issue, but in more complex situation where you have mouse hover it start flickering, like changing randomly labels and VectorTiles background transparency.

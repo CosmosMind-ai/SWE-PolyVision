@@ -1,0 +1,71 @@
+Fix bug preventing full map from rendering when viewport is < 512px
+<!--
+Hello! Thanks for contributing. To help us diagnose your problem quickly, please:
+
+ - Include a link to a minimal demonstration of the bug. We recommend using https://jsbin.com
+ - Ensure you can reproduce the bug using the latest release.
+ - Check the console for relevant errors and warnings
+ - Only post to report a bug or request a feature. Direct all other questions to https://stackoverflow.com/questions/tagged/mapbox-gl-js
+-->
+
+**mapbox-gl-js version**: master
+### Steps to Trigger Behavior
+1. Create a map using, e.g., Mapbox Streets, in a div that is smaller than 512x512.
+2. Zoom 'all the way out' (i.e. initialize the map to `center: [0, 0], zoom: 0`
+### Expected Behavior
+
+The whole world is shown.
+### Actual Behavior
+
+The whole world is not shown.
+
+Repro: https://bl.ocks.org/anandthakker/raw/0e9afc1d09356f87449b5ffa3e49bd82/
+
+## Relevant pre-fix discussion
+
+### Issue #3055
+
+#### Comment at 2019-04-11T02:32:58Z
+
+Is preventing the entire world from appearing on small screens expected behavior?
+
+I want to show clusters which span the entire world. It's a confusing UX to not have all the pins / clusters appear at once. 
+
+This is how my map currently looks:
+![Screen Shot 2019-04-10 at 7 30 28 PM](assets/mapbox__mapbox-gl-js-9028/001.png)
+
+
+For reference, this is how mapbox.js + Leaflet handled this case:
+![Screen Shot 2019-04-10 at 7 24 16 PM](assets/mapbox__mapbox-gl-js-9028/002.png)
+
+There are some downsides to showing the full world.  Specifically, the grey area above and below the map look strange. I think the ideal option is to add a configuration value for disabling this behavior.
+
+#### Comment at 2019-11-15T20:54:20Z
+
+@supersteves That's correct. The 512 tile size is an internal architectural detail of GL JS. It is possible to have raster tiles of a different size (the Mapbox Satellite style uses 256 tiles for example) but we effectively scale them up by one so that at `0/0/0` you actually see 4 tiles that form a 512px view of the entire world, as shown below. GL JS isn't set up to display 256x256 tiles that display the entire world.
+
+![Screen Shot 2019-11-15 at 12 51 05 PM](assets/mapbox__mapbox-gl-js-9028/003.png)
+
+#### Comment at 2019-11-27T04:20:54Z
+
+@supersteves @charliemcgrady @krispy-visokio @juho-hanhimaki @eddydg 
+
+Thanks for providing your feedback on this issue! We have a proposal up that renders maps with the camera at a negative zoom levels (up to `-2`) in containers <512px when zoomed out all the way: https://github.com/mapbox/mapbox-gl-js/pull/9028
+
+With this change, much more of the world is rendered, but the behavior does not exactly match what's possible on mapbox.js + Leaflet, in part due to the limitations @ryanhamley outlined [here](https://github.com/mapbox/mapbox-gl-js/issues/3055#issuecomment-554152535). I've pasted a few visual examples below.
+
+### Questions:
+- Would you consider this change to solve enough of your use case such that you don't feel the need to implement additional workarounds?
+- If not, would you still consider this change to be an improvement from the current behavior?
+
+### Examples:
+
+With https://github.com/mapbox/mapbox-gl-js/pull/9028, the amount of the world that's shown depends on the aspect ratio of the viewport in containers <512px. Even when zoomed out all the way, the map will still fill the vertical space of the container. For example:
+ 
+![Screen Shot 2019-11-26 at 3 03 43 PM](assets/mapbox__mapbox-gl-js-9028/004.png)
+
+![image](assets/mapbox__mapbox-gl-js-9028/005.png)
+
+This would be instead of the following behavior, which was originally requested above:
+
+![Screen Shot 2019-04-10 at 7 24 16 PM](assets/mapbox__mapbox-gl-js-9028/002.png)

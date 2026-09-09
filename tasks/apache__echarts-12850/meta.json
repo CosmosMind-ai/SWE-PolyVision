@@ -1,0 +1,19 @@
+{
+  "instance_id": "apache__echarts-12850",
+  "repo": "apache/echarts",
+  "base_commit": "6f78c0d5191378e604fc88eb07b7ffabdb69aa3e",
+  "environment_setup_commit": "6f78c0d5191378e604fc88eb07b7ffabdb69aa3e",
+  "created_at": "2020-06-23T03:42:03Z",
+  "version": "4.8.0",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/apache__echarts-12850/001.png",
+      "assets/apache__echarts-12850/002.png",
+      "assets/apache__echarts-12850/003.png",
+      "assets/apache__echarts-12850/004.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

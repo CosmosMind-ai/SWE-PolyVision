@@ -1,0 +1,122 @@
+Incorrect rendering of URL logos supplied to _brand.yml when rendering to HTML
+### Bug description
+
+When brand logos are supplied via a URL, quarto renders the URL in the HTML using `\` instead of `/`. This will appropriately show the logo when previewing the render locally, but when pushed to a GitHub Pages site the URL gets converted to a relative path based on the current website. For example, if I have a logo hosted at `https://mysite.github.io/branding/logos/example.png`, and I try to link to it in the `_brand.yml` at `https://mysite.github.io/mypage`, the URL embedded in the html will convert the logo URL to `https:\mysite.github.io\branding\logos\example.png`, which will try to redirect to `https://mysite.github.io/mysite.github.io/branding/logos/example.png` (real example shown in the screenshot)
+
+![Image](assets/quarto-dev__quarto-cli-13215/001.png)
+
+### Steps to reproduce
+
+````qmd
+---
+title: "Reproducible Quarto Document"
+format: html
+brand:
+  logo: 
+    images:
+      quarto-logo: 
+        path: ![Image](assets/quarto-dev__quarto-cli-13215/002.png)
+        alt: "Quarto icon"
+    small: quarto-logo
+---
+
+This is a reproducible Quarto document using `format: html`. It is written in Markdown and contains embedded Python code. When you run the code, it will produce a message.
+
+{{< lipsum 1 >}}
+
+{{< brand logo small>}}
+
+The end.
+````
+
+### Actual behavior
+
+HTML renders the image as follows: `<img src="https:\quarto.org\quarto.png" class="img-fluid">`
+When shown in a local preview, this renders the image correctly. When hosted on an external website using GitHub Pages, this appends the image URL to the website URL
+
+### Expected behavior
+
+HTML renders the image with the full URL: `![Image](assets/quarto-dev__quarto-cli-13215/002.png)`
+When shown on an external website in a browser, this should correctly render the image.
+
+### Your environment
+
+- IDE: Positron 2025.05.0 build 58
+- OS: Windows 11
+
+### Quarto check output
+
+```
+Quarto 1.7.29
+[>] Checking environment information...
+      Quarto cache location: C:\Users\Jonathan.Peake\AppData\Local\quarto
+[>] Checking versions of quarto binary dependencies...
+      Pandoc version 3.6.3: OK
+      Dart Sass version 1.85.1: OK
+      Deno version 1.46.3: OK
+      Typst version 0.13.0: OK
+[>] Checking versions of quarto dependencies......OK
+[>] Checking Quarto installation......OK
+      Version: 1.7.29
+      Path: C:\Users\Jonathan.Peake\AppData\Local\Programs\Quarto\bin
+      CodePage: 1252
+
+[>] Checking tools....................OK
+      TinyTeX: (external install)
+      Chromium: (not installed)
+
+[>] Checking LaTeX....................OK
+      Using: TinyTex
+      Path: C:\Users\Jonathan.Peake\AppData\Roaming\TinyTeX\bin\windows\
+      Version: 2025
+
+[>] Checking Chrome Headless....................OK
+      Using: Chrome found on system
+      Path: C:\Program Files\Google\Chrome\Application\chrome.exe
+      Source: Windows Registry
+
+[>] Checking basic markdown render....OK
+
+[>] Checking Python 3 installation....OK
+      Version: 3.12.9 (Conda)
+      Path: C:/Users/Jonathan.Peake/AppData/Local/miniforge3/python.EXE
+      Jupyter: (None)
+
+      Jupyter is not available in this Python installation.
+      Install with conda install jupyter
+
+[>] Checking R installation...........OK
+      Version: 4.4.2
+      Path: C:/Users/Jonathan.Peake/AppData/Local/Programs/R/R-4.4.2
+      LibPaths:
+        - C:/Users/Jonathan.Peake/AppData/Local/Programs/R/R-4.4.2/library
+      knitr: 1.50
+      rmarkdown: 2.29
+
+[>] Checking Knitr engine render......OK
+```
+
+## Relevant pre-fix discussion
+
+### Issue #12643
+
+#### Comment at 2025-04-29T18:50:18Z
+
+I also created a live GitHub Pages site from the reprex quarto file: https://jonpeake.github.io/quarto-reprex/reprex.html
+
+When accessed from site url:
+
+![Image](assets/quarto-dev__quarto-cli-13215/003.png)
+
+When previewing locally:
+
+![Image](assets/quarto-dev__quarto-cli-13215/004.png)
+
+#### Comment at 2025-04-29T22:43:45Z
+
+I followed the formatting used in this doc, which suggests that a URL is not only allowed but supported:
+https://quarto.org/docs/authoring/brand.html
+
+![Image](assets/quarto-dev__quarto-cli-13215/005.png)
+
+![Image](assets/quarto-dev__quarto-cli-13215/006.png)

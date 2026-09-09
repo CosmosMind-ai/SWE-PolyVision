@@ -1,0 +1,51 @@
+Bar chart issue: Generates merged bar chart if we reduces width of zoom bar to its certain width.
+Description:
+1. Created bar chart with following given option object:
+2. I reduced width of zoom bar to its certain width, as given in option object:  "minSpan": 0.5 
+3. Have a look at attached screenshot.
+```js
+option = {
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: 'bar'
+    }],
+     "dataZoom": {
+    "type": "slider",
+    "show": true,
+    "minSpan": 0.5,
+    "filterMode": "empty",
+    "start": 87.65476305836627,
+    "end": 94.3056847654145,
+    "xAxisIndex": [
+      0
+    ]
+  },
+};
+```
+
+Result:
+![medha2](assets/apache__echarts-10173/001.png)
+![medha1](assets/apache__echarts-10173/002.png)
+
+## Relevant pre-fix discussion
+
+### Issue #9882
+
+#### Comment at 2019-01-31T17:33:44Z
+
+Here's a gif that explains the issue better:
+
+![2019-01-31 11 31 57](assets/apache__echarts-10173/003.gif)
+
+#### Comment at 2019-03-26T17:59:54Z
+
+This also affects stacked column charts
+
+![2019-03-25_12 52 42](assets/apache__echarts-10173/004.gif)

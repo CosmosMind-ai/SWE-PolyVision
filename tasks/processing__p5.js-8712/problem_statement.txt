@@ -1,0 +1,83 @@
+Points are always rendered in the center
+### Most appropriate sub-area of p5.js?
+
+- [ ] Accessibility
+- [ ] Color
+- [ ] Core/Environment/Rendering
+- [ ] Data
+- [ ] DOM
+- [ ] Events
+- [ ] Image
+- [ ] IO
+- [ ] Math
+- [ ] Typography
+- [ ] Utilities
+- [ ] p5.strands
+- [x] WebGL
+- [ ] DevOps, Build process, Unit testing
+- [ ] Internationalization (i18n)
+- [ ] Friendly Errors
+- [ ] Other (specify if possible)
+
+### p5.js version
+
+1.11.12
+
+### Web browser and version
+
+Chrome 146.0.7680.165
+
+### Operating system
+
+Windows
+
+### Steps to reproduce this
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+}
+
+function draw() {
+  background(0);
+
+  camera(0, 0, 200, 0, 0, 0, 0, 1, 0);
+
+  stroke(255);
+  strokeWeight(8);
+  
+  point(20, 20, 0);
+}
+
+the behavior is very different from 1.11.11 and 2.0
+
+## Relevant pre-fix discussion
+
+### Issue #8701
+
+#### Comment at 2026-04-07T12:35:49Z
+
+I can't reproduce this issue on Linux. I get the same output for both versions. But I don't think it is a problem with the OS
+
+![Image](assets/processing__p5.js-8712/001.png)
+
+![Image](assets/processing__p5.js-8712/002.png)
+
+#### Comment at 2026-04-07T16:58:12Z
+
+![Image](assets/processing__p5.js-8712/003.png)
+
+![Image](assets/processing__p5.js-8712/004.png)
+
+#### Comment at 2026-04-07T17:01:23Z
+
+![Image](assets/processing__p5.js-8712/005.png)
+
+#### Comment at 2026-04-07T17:03:46Z
+
+![Image](assets/processing__p5.js-8712/006.png)
+
+#### Comment at 2026-04-08T02:45:38Z
+
+the same picture in the last two examples, in the references section on the website
+https://p5js.org/reference/p5/point/
+![Image](assets/processing__p5.js-8712/007.png)

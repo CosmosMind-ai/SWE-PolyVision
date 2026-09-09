@@ -1,0 +1,135 @@
+Error rendering code in callout (code listing in a callout)
+Error:
+
+- The error appears to be caused by placing attributed code inside a callout 
+- Issue could be that we're incorrectly turning this into a code listing
+- Issue could be that we don't properly support code listings in callouts
+
+
+```
+LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...
+
+l.221
+```
+
+
+repro:
+
+````markdown
+
+---
+title: Hello
+format: pdf
+keep-tex: true
+---
+
+::: {.callout-note}
+If the `www-frame-origin` option is set to `same` or `any` instead of a URI, you must add the following setting with the actual URI:
+
+```{.ini filename="/etc/rstudio/rsession.conf"}
+tutorial-api-client-origin=http://localhost:8080
+```
+:::
+
+````
+
+
+relevant tex diff:
+
+**Good**
+```latex
+\begin{tcolorbox}[enhanced jigsaw, left=2mm, rightrule=.15mm, arc=.35mm, toprule=.15mm, coltitle=black, bottomtitle=1mm, titlerule=0mm, opacityback=0, breakable, opacitybacktitle=0.6, toptitle=1mm, colbacktitle=quarto-callout-note-color!10!white, colback=white, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Note}, bottomrule=.15mm, leftrule=.75mm]
+
+If the \texttt{www-frame-origin} option is set to \texttt{same} or
+\texttt{any} instead of a URI, you must add the following setting with
+the actual URI:
+
+\textbf{/etc/rstudio/rsession.conf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DataTypeTok{tutorial{-}api{-}client{-}origin}\OtherTok{=}\StringTok{http://localhost:8080}
+\end{Highlighting}
+\end{Shaded}
+
+\end{tcolorbox}
+```
+
+**Bad**
+```latex
+\begin{tcolorbox}[enhanced jigsaw, leftrule=.75mm, arc=.35mm, toptitle=1mm, left=2mm, colback=white, breakable, colbacktitle=quarto-callout-note-color!10!white, bottomtitle=1mm, title=\textcolor{quarto-callout-note-color}{\faInfo}\hspace{0.5em}{Note}, bottomrule=.15mm, titlerule=0mm, opacityback=0, colframe=quarto-callout-note-color-frame, toprule=.15mm, rightrule=.15mm, opacitybacktitle=0.6, coltitle=black]
+
+If the \texttt{www-frame-origin} option is set to \texttt{same} or
+\texttt{any} instead of a URI, you must add the following setting with
+the actual URI:
+
+\begin{codelisting}
+
+\caption{\texttt{/etc/rstudio/rsession.conf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DataTypeTok{tutorial{-}api{-}client{-}origin}\OtherTok{=}\StringTok{http://localhost:8080}
+\end{Highlighting}
+\end{Shaded}
+
+\end{codelisting}
+
+\end{tcolorbox}
+```
+
+## Relevant pre-fix discussion
+
+### Issue #5011
+
+#### Comment at 2023-03-29T03:39:27Z
+
+Let's talk about this live tomorrow.
+
+The issue is the presence of `filename="/etc/rstudio/rsession.conf"`. That causes us to attempt to render the code block as a listing, so that we can do the caption treatment on it.
+
+In 1.2, we'd render the code block by itself like this:
+
+![image](assets/quarto-dev__quarto-cli-5018/001.png)
+
+In 1.3, we render the code block by itself like this:
+
+![image](assets/quarto-dev__quarto-cli-5018/002.png)
+
+I did this by design, but only because I didn't consider that people would want to put a listing inside a callout.
+
+I think the new appearance is better, but I agree that we should have a way to disable this treatment since LaTeX callouts are necessarily relatively limited in functionality.
+
+#### Comment at 2023-03-29T03:41:56Z
+
+Without the filename attribute, we render successfully in 1.3:
+
+![image](assets/quarto-dev__quarto-cli-5018/003.png)
+
+This suggests a workaround: move `/etc/rstudio/rsession.conf` to outside the listing (and filename declaration), and into plain markdown content before the code block, `**/etc/rstudio/rsession.conf**`:
+
+````
+---
+title: Hello
+format: pdf
+---
+
+::: {.callout-note}
+If the `www-frame-origin` option is set to `same` or `any` instead of a URI, you must add the following setting with the actual URI:
+
+**/etc/rstudio/rsession.conf**
+
+```{.ini}
+tutorial-api-client-origin=http://localhost:8080
+```
+:::
+````
+
+
+
+
+![image](assets/quarto-dev__quarto-cli-5018/004.png)

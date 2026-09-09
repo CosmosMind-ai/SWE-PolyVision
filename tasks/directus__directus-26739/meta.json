@@ -1,0 +1,21 @@
+{
+  "instance_id": "directus__directus-26739",
+  "repo": "directus/directus",
+  "base_commit": "54a35009d15177d6a9dde22c67ac2b9c5036a74e",
+  "environment_setup_commit": "54a35009d15177d6a9dde22c67ac2b9c5036a74e",
+  "created_at": "",
+  "version": "",
+  "image_count": 6,
+  "image_assets": {
+    "problem_statement": [
+      "assets/directus__directus-26739/001.mov",
+      "assets/directus__directus-26739/002.png",
+      "assets/directus__directus-26739/003.png",
+      "assets/directus__directus-26739/derived/001/frame-01.png",
+      "assets/directus__directus-26739/derived/001/frame-02.png",
+      "assets/directus__directus-26739/derived/001/frame-03.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

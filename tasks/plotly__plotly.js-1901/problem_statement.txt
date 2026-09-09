@@ -1,0 +1,49 @@
+Histogram does not scale to the range of new data on restyle
+If you set up a histogram...
+
+```
+var data1 = [1, 2, 2, 3, 3, 3, 4, 4, 5];
+var hist = document.getElementById('hist_div');
+Plotly.plot(hist, [{x: data1, type: 'histogram' }]);
+```
+
+... and then update this histogram with wider data followed by a restyle...
+
+```
+var data2 = [10, 20, 20, 30, 30, 30, 40, 40, 50];
+Plotly.restyle(hist, {x: [data2]});
+```
+
+... the histogram keeps the old range (in this case 1 to 5) and does not scale to the range of the new data (which is the case when using scatter style plot). Here is a codepen showing this: http://codepen.io/rasmusab/pen/megKOo
+
+I have not found any documentation regarding whether this is the expected behavior. If it is, what would be the best practice for updating a histogram with new data?
+
+## Relevant pre-fix discussion
+
+### Issue #24
+
+#### Comment at 2017-07-20T16:45:00Z
+
+Ha, for colorscales it turns out we [already do](https://github.com/plotly/plotly.js/blob/master/src/components/colorscale/calc.js#L57-L65) what I was about to propose here: if you explicitly specify `*auto: false`, then it will fill in the auto values but leave it looking like `*auto: false` so that future changes will not re-invoke the autoscaling; but if you don't specify an explicit `*auto` value it defaults to `true` since the explicit ranges are missing.
+
+So for example:
+```
+var x1 = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4];
+var y1 = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4];
+Plotly.newPlot(gd, [{type: 'histogram2d', x: x1, y: y1, zauto: false}]);
+```
+![screen shot 2017-07-20 at 12 35 48 pm](assets/plotly__plotly.js-1901/001.png)
+
+and then:
+```
+// move the last point so we have one bin that gets 1 sample, another gets 3
+Plotly.restyle(gd,'x', [[1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 3]])
+```
+![screen shot 2017-07-20 at 12 37 17 pm](assets/plotly__plotly.js-1901/002.png)
+range is still 1.5->2.5
+
+But if you don't specify `zauto: false` in the first place, the initial plot is identical but after `restyle` you get:
+![screen shot 2017-07-20 at 12 38 56 pm](assets/plotly__plotly.js-1901/003.png)
+recalculated autocolor: 1->3
+
+So I think it's *only* in the context of histogram bins that this is a change - and therefore I'd consider it an inconsistency, a bug, not a breaking change, and I should implement the same logic with explicit `autobin*: false` values in histograms.

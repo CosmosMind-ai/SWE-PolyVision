@@ -1,0 +1,30 @@
+Integrated browser tab unexpectedly paints on top of modal
+Version: 1.125.0-insider (Universal)
+Commit: d420356ab9998a711c36d7c51a2d7d2c91c73a87
+OS: Darwin arm64 24.6.0
+
+Steps to Reproduce:
+
+1. Open a new integrated browser tab
+2. Open "Language Models" modal of the GitHub Copilot
+3. Hit the "+ Add Models..." button
+
+Expected result: A drop down list shows up below the "+ Add Models..." button
+
+Actual result: The drop down list that is expected to show up actually shows up. But, in addition, the integrated browser tab (which until this point was behind the modal) suddenly gets painted on top of the modal ! (See screenshot)
+
+![Image](assets/microsoft__vscode-321227/001.png)
+
+Note: I have not been able to reproduce this consistently - after i took the screenshot above, i used "Toggle Developer Tools" to open the dev tools to just check what might be the issue. But ever since i did that, the issue stopped happening anymore magically ! But my hope is you might be able to use this issue as a reason to review the relevant subsystems (integrated browser, modals) for latent bugs.
+
+## Relevant pre-fix discussion
+
+### Issue #321088
+
+#### Comment at 2026-06-12T20:55:25Z
+
+An important fact is that the issue only happens when the "Add Models..." dropdown doesn't overlap with the browser rectangle:
+![Image](assets/microsoft__vscode-321227/002.png)
+
+When it does overlap, it doesn't repro
+![Image](assets/microsoft__vscode-321227/003.png)

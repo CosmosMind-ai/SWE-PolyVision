@@ -1,0 +1,21 @@
+{
+  "instance_id": "pnpm__pnpm-4969",
+  "repo": "pnpm/pnpm",
+  "base_commit": "e9946fcfa7e1892fb550a2164c2040fea2574cdd",
+  "environment_setup_commit": "e9946fcfa7e1892fb550a2164c2040fea2574cdd",
+  "created_at": "2022-07-02T12:06:33Z",
+  "version": "v7.4.1",
+  "image_count": 6,
+  "image_assets": {
+    "problem_statement": [
+      "assets/pnpm__pnpm-4969/001.png",
+      "assets/pnpm__pnpm-4969/002.png",
+      "assets/pnpm__pnpm-4969/003.png",
+      "assets/pnpm__pnpm-4969/004.png",
+      "assets/pnpm__pnpm-4969/005.png",
+      "assets/pnpm__pnpm-4969/006.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

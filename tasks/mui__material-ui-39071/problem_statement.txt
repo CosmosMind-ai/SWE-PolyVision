@@ -1,0 +1,173 @@
+[material] Invalid `color` prop has no effect
+- [X] I have searched the existing issues
+- [X] I have tested the latest version
+
+### Steps to reproduce 🕹
+
+Link to live example: [CodeSandbox fork](https://codesandbox.io/s/mui-invalid-color-is-silently-swallowed-gtwdg2) based on the [Typography demo](https://mui.com/material-ui/react-typography/) from the docs
+
+1. Open [CodeSandbox fork ](https://codesandbox.io/s/mui-invalid-color-is-silently-swallowed-gtwdg2)
+2. Observe invalid `color` prop to `mui.Typography` has no effect
+
+### Current behavior 😯
+
+Invalid `color` prop has absolutely no effect:
+- no warnings or errors
+- no type checking
+- no invalid CSS (at least it would serve as an indicator to the developer)
+
+### Expected behavior 🤔
+
+In `NODE_ENV=development` or using an optional flag to `mui.createTheme`, etc.
+- we should tell the developer there's an invalid `color` prop
+
+# Proposal
+
+<details>
+  <summary>Here's what we use internally</summary>
+  
+```ts
+import * as mui from "@mui/material"
+
+import { palettes } from "../options/palette"
+
+let validColors: string[] | undefined
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
+export const isColorValid = /* @__PURE__ */ (color?: unknown) => {
+  if (process.env.NODE_ENV === `production`) return
+  if (typeof color !== `string`) return
+
+  if (!validColors) {
+    const tones = Object.keys({
+      main: true,
+      light: true,
+      dark: true,
+      contrastText: true,
+    } satisfies Record<keyof mui.SimplePaletteColorOptions, true>)
+
+    const colors = Object.keys({
+      primary: true,
+      secondary: true,
+      error: true,
+      warning: true,
+      info: true,
+      success: true,
+    } satisfies Record<ColorWithTones, true>)
+
+    const text = Object.keys({
+      disabled: true,
+      primary: true,
+      secondary: true,
+    } satisfies Record<keyof mui.TypeText, true>)
+
+    const background = Object.keys({
+      default: true,
+      paper: true,
+      ground: true,
+    } satisfies Record<keyof mui.TypeBackground, true>)
+
+    /**
+     * Sometimes, we want to let the user to a color that is not in the palette (theme)
+     */
+    const validStaticColors = [`white`]
+
+    /**
+     * A user can use a literal color, by using "mui.useTheme" and then pass a literal color
+     */
+    const literalThemeColors = Object.keys(palettes).flatMap((paletteName) => {
+      const palette = palettes[paletteName]
+      const literals = new Set<string>() // to avoid duplicates
+      for (const key of Object.keys(palette)) {
+        const value = palette[key]
+        if (typeof value === `string`) {
+          literals.add(value)
+          continue
+        }
+
+        for (const valueKey of Object.keys(value)) {
+          const nestedValue = value[valueKey]
+          if (typeof nestedValue === `string`) {
+            literals.add(nestedValue)
+            continue
+          }
+        }
+      }
+      return [...literals]
+    })
+
+    validColors = [
+      ...validStaticColors,
+      ...literalThemeColors,
+      `primary`,
+      `secondary`,
+      ...background.map((tone) => `background.${tone}`),
+      ...text.map((tone) => `text.${tone}`),
+      ...colors.flatMap((color) => tones.map((tone) => `${color}.${tone}`)),
+    ]
+  }
+
+  if (!validColors.includes(color)) {
+    throw new Error(
+      `Invalid color: "${color}"\n` +
+        `Valid colors are: ${validColors.join(`, `)}`,
+    )
+  }
+}
+```
+</details>
+
+## Relevant pre-fix discussion
+
+### Issue #38478
+
+#### Comment at 2023-09-04T19:39:38Z
+
+Hey @o-alexandrov, thanks for the report!
+
+This is a bug. I think what's happening is that "background" is a key in the [theme palette](https://mui.com/material-ui/customization/default-theme/?expand-path=$.palette), so we try to use that value, but it's an object (with `"paper"` and `"default"` keys). The expected behavior here is that `"background"` goes through to CSS. That way, the developer gets notice that it's not valid. This is the current behavior for other not valid colors, for example, when providing `"not-a-color"` in the codesandbox:
+
+![Screenshot 2023-09-04 at 16 35 43](assets/mui__material-ui-39071/001.png)
+
+Adding the ready-to-take label.
+
+#### Comment at 2023-09-15T06:02:42Z
+
+I debugged this a bit and found that it's actually setting the color value to the `background` property found in the theme object. But the problem as you pointed out correctly is that the `background` property is an object. So it's setting it as -
+
+```
+color: {
+  paper: '#value',
+  default: '#value',
+}
+```
+
+When this goes through emotion, it's style gets generated as -
+
+```
+.emotion-client-render-bd0kf1-MuiTypography-root color{paper:#fff;default:#fff;}
+```
+
+Codesandbox inspect element -
+
+![Screenshot 2023-09-15 at 3 12 44 PM](assets/mui__material-ui-39071/002.png)
+
+Which is correct as per emotion. So we should be checking the value to be a primitive type (string/number/boolean etc). If it's not, we should not set the property's value itself and also log an error to console in dev mode.
+
+The testing can be made easier by adding this test in `Typography.test.js`
+
+
+    it.only('should', () => {
+      const { container, debug } = render(
+        <Typography variant="h6" color="background">
+          Hello
+        </Typography>,
+      );
+      console.log(document.documentElement.innerHTML);
+      debug(container);
+    });
+
+The logged html can be checked for correctness of generated CSS.
+
+@DarhkVoyd Let me know if you'll be taking this up. If not, I'll fix it.

@@ -1,0 +1,22 @@
+{
+  "instance_id": "mermaid-js__mermaid-4804",
+  "repo": "mermaid-js/mermaid",
+  "base_commit": "6e51f8fd9840a788bcca1f2cd2aabd78bcf3b74a",
+  "environment_setup_commit": "6e51f8fd9840a788bcca1f2cd2aabd78bcf3b74a",
+  "created_at": "",
+  "version": "",
+  "image_count": 7,
+  "image_assets": {
+    "problem_statement": [
+      "assets/mermaid-js__mermaid-4804/001.png",
+      "assets/mermaid-js__mermaid-4804/002.png",
+      "assets/mermaid-js__mermaid-4804/003.png",
+      "assets/mermaid-js__mermaid-4804/004.png",
+      "assets/mermaid-js__mermaid-4804/005.png",
+      "assets/mermaid-js__mermaid-4804/006.png",
+      "assets/mermaid-js__mermaid-4804/007.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

@@ -1,0 +1,66 @@
+Box breaks when using border="between" and a gap size in pixels
+The Box component breaks at runtime when specifying this two properties:
+```
+border="between"
+gap="10px" // or any other size in px
+```
+which are both legit values according to the docs.
+
+### Expected Behavior
+
+The Box component applies half the value of _gap_ around the separator line.
+
+### Actual Behavior
+
+The Box components throws:
+```
+TypeError: Cannot read properties of undefined (reading 'match')
+```
+
+### URL, screen shot, or Codepen exhibiting the issue
+
+![Screenshot 2022-11-09 at 18 14 51](assets/grommet__grommet-6490/001.png)
+
+### Steps to Reproduce
+
+1. Go to https://v2.grommet.io/box
+2. Assign `border="between"` to the Box
+3. Assign `gap="10px"` to the Box
+4. Watch for the 💥 
+
+### Your Environment
+
+- Grommet version: 2.11.4, 2.27.0
+- Browser Name and version: any (Chrome, Firefox, Safari)
+- Operating System and version (desktop or mobile): macOS 12.6
+
+## Relevant pre-fix discussion
+
+### Issue #6485
+
+#### Comment at 2022-11-13T17:07:28Z
+
+Hi @shb,
+I checked and found you need to pass the correct props value for the **gap**.
+Gap will work if you pass the correct prop value to it.
+I am sharing the gap props value
+
+![GapProps](assets/grommet__grommet-6490/002.png)
+
+
+```Javascript
+ <Box direction="row" gap="medium" border="between" pad="medium">
+    <Box pad="small" background="dark-3">
+      Test 1
+    </Box>
+    <Box pad="medium" background="light-3">
+      Test 2
+    </Box>
+  </Box>
+```
+
+Output:
+![GapOutput](assets/grommet__grommet-6490/003.png)
+
+Thanks,
+Umesh

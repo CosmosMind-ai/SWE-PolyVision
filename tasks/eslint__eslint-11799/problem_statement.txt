@@ -1,0 +1,93 @@
+envs in overrides was not applied
+<!--
+    ESLint adheres to the [JS Foundation Code of Conduct](https://js.foundation/community/code-of-conduct).
+
+    This template is for bug reports. If you are here for another reason, please see below:
+
+    1. To propose a new rule: https://eslint.org/docs/developer-guide/contributing/new-rules
+    2. To request a rule change: https://eslint.org/docs/developer-guide/contributing/rule-changes
+    3. To request a change that is not a bug fix, rule change, or new rule: https://eslint.org/docs/developer-guide/contributing/changes
+    4. If you have any questions, please stop by our chatroom: https://gitter.im/eslint/eslint
+
+    Note that leaving sections blank will make it difficult for us to troubleshoot and we may have to close the issue.
+-->
+
+**Tell us about your environment**
+
+* **ESLint Version:** v5.16.0
+* **Node Version:** v10.15.3
+* **npm Version:** 6.9.0
+
+**What parser (default, Babel-ESLint, etc.) are you using?**
+
+**Please show your full configuration:**
+
+<details>
+<summary>Configuration</summary>
+
+<!-- Paste your configuration below: -->
+```js
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "./lib/*.js"
+        ],
+        "env": {
+          "browser": true
+        }
+      }
+    ]
+  },
+```
+
+</details>
+
+**What did you do? Please include the actual source code causing the issue, as well as the command that you used to run ESLint.**
+
+<!-- Paste the source code below: -->
+```js
+'use strict';
+
+window.console.log('hello');
+```
+
+<!-- Paste the command you used to run ESLint: -->
+```bash
+
+```
+
+**What did you expect to happen?**
+not error reported, since it has setting `env "browser": true`
+
+**What actually happened? Please include the actual, raw output from ESLint.**
+```bash
+/Users/weiran/repo/work/eslint-issue/lib/index.js
+  3:1  error  'window' is not defined  no-unde
+```
+
+**Are you willing to submit a pull request to fix this bug?**
+yes
+
+## Relevant pre-fix discussion
+
+### Issue #11577
+
+#### Comment at 2019-04-02T11:24:39Z
+
+Indeed, I agree that it's surprising if `./lib/*.js` and `lib/*.js` have different behaviors.
+
+`minimatch` looks handling the two as different patterns:
+![image](assets/eslint__eslint-11799/001.png)
+
+It may be https://github.com/isaacs/minimatch/issues/30.
+Probably we can remove `./` and `.\` at the start of paths then pass it to `minimatch`.
+
+#### Comment at 2019-06-03T09:58:43Z
+
+After some investigating, I don't think the switching by this issue is reasonable because Micromatch has the same behavior about `./` as Minimatch. The switch is not related to this issue.
+
+![image](assets/eslint__eslint-11799/002.png)

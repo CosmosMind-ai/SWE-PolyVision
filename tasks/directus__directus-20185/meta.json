@@ -1,0 +1,20 @@
+{
+  "instance_id": "directus__directus-20185",
+  "repo": "directus/directus",
+  "base_commit": "9d80bd899be567042410e7254fd1287853e9580c",
+  "environment_setup_commit": "9d80bd899be567042410e7254fd1287853e9580c",
+  "created_at": "",
+  "version": "",
+  "image_count": 5,
+  "image_assets": {
+    "problem_statement": [
+      "assets/directus__directus-20185/001.png",
+      "assets/directus__directus-20185/002.png",
+      "assets/directus__directus-20185/003.png",
+      "assets/directus__directus-20185/004.png",
+      "assets/directus__directus-20185/005.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

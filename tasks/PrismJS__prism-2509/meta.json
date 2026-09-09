@@ -1,0 +1,19 @@
+{
+  "instance_id": "PrismJS__prism-2509",
+  "repo": "PrismJS/prism",
+  "base_commit": "bf4f323391d546d4b2e1a388f05c512a27491e9c",
+  "environment_setup_commit": "bf4f323391d546d4b2e1a388f05c512a27491e9c",
+  "created_at": "2020-08-06T21:20:46Z",
+  "version": "v1.20.0",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/PrismJS__prism-2509/001.png",
+      "assets/PrismJS__prism-2509/002.png",
+      "assets/PrismJS__prism-2509/003.png",
+      "assets/PrismJS__prism-2509/004.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

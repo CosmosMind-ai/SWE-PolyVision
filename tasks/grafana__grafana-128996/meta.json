@@ -1,0 +1,17 @@
+{
+  "instance_id": "grafana__grafana-128996",
+  "repo": "grafana/grafana",
+  "base_commit": "e4b0f5c7992827a6ca327b94bcdd7833e2ddcf97",
+  "environment_setup_commit": "e4b0f5c7992827a6ca327b94bcdd7833e2ddcf97",
+  "created_at": "",
+  "version": "",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/grafana__grafana-128996/001.png",
+      "assets/grafana__grafana-128996/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

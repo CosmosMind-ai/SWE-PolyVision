@@ -1,0 +1,19 @@
+{
+  "instance_id": "openlayers__openlayers-13013",
+  "repo": "openlayers/openlayers",
+  "base_commit": "a715b1f5c6a64f80298fd424306f2bafb9752e4c",
+  "environment_setup_commit": "a715b1f5c6a64f80298fd424306f2bafb9752e4c",
+  "created_at": "2021-11-16T17:23:53Z",
+  "version": "v6.9.0",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/openlayers__openlayers-13013/001.png",
+      "assets/openlayers__openlayers-13013/002.png",
+      "assets/openlayers__openlayers-13013/003.png",
+      "assets/openlayers__openlayers-13013/004.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

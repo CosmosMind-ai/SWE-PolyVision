@@ -1,0 +1,19 @@
+{
+  "instance_id": "apache__echarts-10173",
+  "repo": "apache/echarts",
+  "base_commit": "243b22f4d3c1c2e32b06517d6295067fdd076acf",
+  "environment_setup_commit": "243b22f4d3c1c2e32b06517d6295067fdd076acf",
+  "created_at": "2019-03-27T16:46:47Z",
+  "version": "4.2.0-rc.2",
+  "image_count": 4,
+  "image_assets": {
+    "problem_statement": [
+      "assets/apache__echarts-10173/001.png",
+      "assets/apache__echarts-10173/002.png",
+      "assets/apache__echarts-10173/003.gif",
+      "assets/apache__echarts-10173/004.gif"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

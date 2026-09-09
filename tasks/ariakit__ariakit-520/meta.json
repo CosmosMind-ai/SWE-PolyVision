@@ -1,0 +1,17 @@
+{
+  "instance_id": "ariakit__ariakit-520",
+  "repo": "ariakit/ariakit",
+  "base_commit": "d5e1e8f070c435acdbab92a95a938be23e5803ae",
+  "environment_setup_commit": "d5e1e8f070c435acdbab92a95a938be23e5803ae",
+  "created_at": "",
+  "version": "",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/ariakit__ariakit-520/001.png",
+      "assets/ariakit__ariakit-520/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

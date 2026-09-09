@@ -1,0 +1,21 @@
+{
+  "instance_id": "outline__outline-12569",
+  "repo": "outline/outline",
+  "base_commit": "8464d995899c84917aad8d085a967776568748fc",
+  "environment_setup_commit": "8464d995899c84917aad8d085a967776568748fc",
+  "created_at": "",
+  "version": "",
+  "image_count": 6,
+  "image_assets": {
+    "problem_statement": [
+      "assets/outline__outline-12569/001.png",
+      "assets/outline__outline-12569/002.png",
+      "assets/outline__outline-12569/003.png",
+      "assets/outline__outline-12569/004.png",
+      "assets/outline__outline-12569/005.png",
+      "assets/outline__outline-12569/006.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

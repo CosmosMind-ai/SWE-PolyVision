@@ -1,0 +1,17 @@
+{
+  "instance_id": "plotly__plotly.js-4977",
+  "repo": "plotly/plotly.js",
+  "base_commit": "c925cd4688df2fc5fc9aacce1d87f36877ae5196",
+  "environment_setup_commit": "c925cd4688df2fc5fc9aacce1d87f36877ae5196",
+  "created_at": "",
+  "version": "",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/plotly__plotly.js-4977/001.png",
+      "assets/plotly__plotly.js-4977/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

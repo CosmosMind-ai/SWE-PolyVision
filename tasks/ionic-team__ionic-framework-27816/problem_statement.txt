@@ -1,0 +1,97 @@
+bug: date value is not finite in DateTimeFormat format() when presentation='year' on ios device
+### Prerequisites
+
+- [X] I have read the [Contributing Guidelines](https://github.com/ionic-team/ionic-framework/blob/main/.github/CONTRIBUTING.md#creating-an-issue).
+- [X] I agree to follow the [Code of Conduct](https://ionicframework.com/code-of-conduct).
+- [X] I have searched for [existing issues](https://github.com/ionic-team/ionic-framework/issues) that already report this problem, without success.
+
+### Ionic Framework Version
+
+v7.x
+
+### Current Behavior
+
+We try to show a ion-datetime with presentation="year" in ion-modal. And we got this bug on ios device. On android. it worked well.
+
+When using ion-datetime with presentation='year'. I got error: "date value is not finite in DateTimeFormat format()"
+![image](assets/ionic-team__ionic-framework-27816/001.png)
+
+I see it happen in getNormalizedDate funtion when we try to new Date() with refParts that have some undefined propertise
+![image](assets/ionic-team__ionic-framework-27816/002.png)
+
+On chrome browser, it work well:
+![image](assets/ionic-team__ionic-framework-27816/003.png)
+
+Result: we dont see the year number.
+
+### Expected Behavior
+
+No more error
+
+### Steps to Reproduce
+
+- Implement ion-datetime with presentation='year'
+- value = 2023;
+`<ion-datetime presentation="year"
+                size="cover"
+                width="100%"
+                [min]="2019"
+                [max]="2030"
+                [(value)]="value"
+                id="datetime"></ion-datetime>`
+- View it on ios device
+
+### Code Reproduction URL
+
+_No response_
+
+### Ionic Info
+
+Ionic:
+
+   Ionic CLI                     : 7.1.1 (/usr/local/lib/node_modules/@ionic/cli)
+   Ionic Framework               : @ionic/angular 7.1.2
+   @angular-devkit/build-angular : 15.2.9
+   @angular-devkit/schematics    : 15.2.9
+   @angular/cli                  : 15.2.9
+   @ionic/angular-toolkit        : 9.0.0
+
+Cordova:
+
+   Cordova CLI       : 12.0.0 (cordova-lib@12.0.1)
+   Cordova Platforms : android 12.0.0, ios 6.3.0
+   Cordova Plugins   : cordova-plugin-ionic-keyboard 2.2.0, cordova-plugin-ionic-webview 5.0.0, (and 33 other plugins)
+
+Utility:
+
+   cordova-res : 0.15.4
+   native-run  : not installed globally
+
+System:
+
+   ios-sim : 8.0.2
+   NodeJS  : v18.16.0 (/usr/local/bin/node)
+   npm     : 9.5.1
+   OS      : macOS Unknown
+   Xcode   : Xcode 14.3 Build version 14E222b
+
+
+### Additional Information
+
+_No response_
+
+## Relevant pre-fix discussion
+
+### Issue #27797
+
+#### Comment at 2023-07-18T05:00:24Z
+
+Hi Liamdebeasi,
+This is the repo, you need to replace the app id by your own:
+https://github.com/heodien/sample-date-time-button
+The ion-datetime-button dont show the year value on ios device. On browser, it's worked well.
+On browser:
+![Screenshot 2023-07-18 at 11 56 19](assets/ionic-team__ionic-framework-27816/004.png)
+On device:
+![photo_2023-07-18_11-58-46](assets/ionic-team__ionic-framework-27816/005.jpg)
+![Screenshot 2023-07-18 at 11 57 50](assets/ionic-team__ionic-framework-27816/006.png)

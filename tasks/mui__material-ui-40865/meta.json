@@ -1,0 +1,29 @@
+{
+  "instance_id": "mui__material-ui-40865",
+  "repo": "mui/material-ui",
+  "base_commit": "4e797158fe59df81bc604f57d2620726e93a82a8",
+  "environment_setup_commit": "4e797158fe59df81bc604f57d2620726e93a82a8",
+  "created_at": "",
+  "version": "",
+  "image_count": 14,
+  "image_assets": {
+    "problem_statement": [
+      "assets/mui__material-ui-40865/001.png",
+      "assets/mui__material-ui-40865/002.png",
+      "assets/mui__material-ui-40865/003.png",
+      "assets/mui__material-ui-40865/004.png",
+      "assets/mui__material-ui-40865/005.png",
+      "assets/mui__material-ui-40865/006.png",
+      "assets/mui__material-ui-40865/007.png",
+      "assets/mui__material-ui-40865/008.png",
+      "assets/mui__material-ui-40865/009.png",
+      "assets/mui__material-ui-40865/010.png",
+      "assets/mui__material-ui-40865/011.png",
+      "assets/mui__material-ui-40865/012.png",
+      "assets/mui__material-ui-40865/013.png",
+      "assets/mui__material-ui-40865/014.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

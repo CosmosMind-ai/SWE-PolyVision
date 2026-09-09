@@ -1,0 +1,397 @@
+Cypress Doesn't Finish Typing Strings Before Continuing to Next Field
+### Current behavior:
+
+When typing a long string into an input field, such as an email address to login in our case, Cypress 3.5.0 appears to no longer type the entire string. It bails on typing the complete string after the period in the email and never completely types the string. For example, `test@webdomainhere.com` would be typed as `test@webdomainhere.` in our app, failing the login.
+
+I have also seen similar things with usernames using mixed case, such as `associateEnabled` would be typed as `associate`, stopping before the capital letter in the string.
+
+Due to this bug we have had to roll back to using Cypress 3.4.1, where this worked fine.
+
+Example screenshot showing a failed login in Cypress 3.5.0 where the email should've had 'com' typed after the period:
+
+![Screen Shot 2019-10-25 at 3 00 45 PM](assets/cypress-io__cypress-9254/001.png)
+
+### Desired behavior:
+
+Entire string passed to a cy.type() function should be typed into the input field.
+
+### Steps to reproduce: (app code and test code)
+
+Type a long string, such as a long email address into a form field and then move on to a password field with a .click() and see that the end of the first string isn't entered.
+
+### Versions
+Cypress v3.5.0 (v3.4.1 works fine, we have had to roll back)
+Mac OSX 10.14.6
+Electron 61 / Chrome 78
+
+## Relevant pre-fix discussion
+
+### Issue #5480
+
+#### Comment at 2019-10-28T19:11:47Z
+
+>Simply use cy.type() on an input field with a string with mixed case and it will reproduce the problem
+
+Recreating what you said does *not* reproduce the problem. There are likely other variables involved with the input or your test that we cannot isolate without you providing a completely reproducible example. 
+
+**Index.html**
+
+```html
+<!doctype html>
+<html lang="en">
+<body>
+  <input id="my-input">
+</body>
+</html>
+```
+
+**Spec.js**
+
+```js
+it('works', () => {
+  cy.visit("index.html")
+  cy.get('#my-input').type('cAmElCaSe')
+    .should('have.value', 'cAmElCaSe')
+})
+```
+
+![Screen Shot 2019-10-28 at 3 09 46 PM](assets/cypress-io__cypress-9254/002.png)
+
+
+Please provide a fully reproducible example so that we can fix your issue as quickly as possible. Thanks!
+
+#### Comment at 2019-10-31T17:46:41Z
+
+@TheWanderingWalnut I was not able to reproduce any failure in the provided test case in 3.4.1 or 3.5.0. 
+
+I did replace `partnerAccountActive` with a string `'partnerAccountActive'` and added a visit. This is passing for me in both versions. 
+
+```js
+it('types in both fields', () => {
+  cy.visit('https://cypressprodtesting.checkfront.com/')
+  cy.get('#cf_id').click().type('partnerAccountActive')
+  cy.get('#cf_pw').click().type('partnerAccountActive')
+  cy.get('#cf_id').should('have.value', 'partnerAccountActive')
+  cy.get('#cf_pw').should('have.value', 'partnerAccountActive')
+})
+```
+
+![Screen Shot 2019-10-31 at 1 42 44 PM](assets/cypress-io__cypress-9254/003.png)
+
+Maybe there is some other variable I am missing. I tried in Canary 80, Chrome 78, Chromium 74 and Electron 73 on my osMac Mohave machine using `cypress open. 
+
+Please also try updating to our recently released 3.6.0, since it fixed some type bugs that were introduced in 3.5.
+
+#### Comment at 2019-11-04T19:13:31Z
+
+Have confirmed, this fails occasionally, especially after rerun in 3.6.0 in both Chrome and Electron.
+
+This is irrespective of any characters being capitalized. 
+
+```js
+it("Logs in as a partner", () => {
+  cy.visit("http://cypressprodtesting.checkfront.com")
+  cy.get('#cf_id').type('partner')
+    .should('have.value', 'partner')
+})
+```
+
+# 3.4.1
+
+Passes on multiple reruns
+
+![Screen Shot 2019-11-06 at 12 05 04 PM](assets/cypress-io__cypress-9254/004.png)
+
+
+# 3.5.0 
+
+Fails when rerunning the spec file. Also fails in 3.6.0
+
+![Screen Shot 2019-11-04 at 2 17 33 PM](assets/cypress-io__cypress-9254/005.png)
+
+
+Events table indicates that it typed the full word 'partner', even though it only typed 'pa' into the email input and *seemed* to type the rest into the password field. 
+
+![Screen Shot 2019-11-04 at 2 15 41 PM](assets/cypress-io__cypress-9254/006.png)
+
+#### Comment at 2019-11-11T15:42:07Z
+
+I'm running 3.4.1 with the following deps, and see this occuring intermittently on multiple fields, often missing the `@` in emails, or dropping a digit off in a phone number field (we see it mostly in chrome, but also in electron too)
+
+```json
+   "@cypress/browserify-preprocessor": "^2.1.1",
+    "@slack/client": "^5.0.2",
+    "@types/cypress-axe": "^0.4.0",
+    "@types/node": "^12.7.8",
+    "aws-sdk": "^2.511.0",
+    "axe-core": "^3.3.1",
+    "browserify": "^16.5.0",
+    "cypress": "3.4.1",
+    "cypress-axe": "^0.5.1",
+    "cypress-failed-log": "^2.5.1",
+    "cypress-multi-reporters": "^1.2.1",
+    "cypress-slack-reporter": "^0.5.0",
+    "husky": "^3.0.3",
+    "lint-staged": "^9.2.1",
+    "mocha": "^6.2.0",
+    "mocha-junit-reporter": "^1.23.1",
+    "mochawesome": "^4.1.0",
+    "mochawesome-merge": "^2.0.1",
+    "mochawesome-report-generator": "^4.0.1",
+    "moment": "^2.24.0",
+    "prettier": "^1.18.2",
+    "shelljs": "^0.8.3",
+    "sonarqube-scanner": "^2.5.0",
+    "tsify": "^4.0.1",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-no-focused-test": "^0.5.0",
+    "typescript": "^3.5.3",
+    "uuid": "^3.3.2",
+    "xlsx": "^0.15.1"
+```
+
+Code for the fields as follows, everything written in typescript and uses browserify preprocessor
+
+```js
+  public populateContactDetails({
+    emailAddress,
+    phoneNumber
+  }: ContactDetailsOverridableFields = {}) {
+    cy.get(dataTestId("contactDetails_emailAddress"))
+      .should("be.visible")
+      .type(emailAddress || "test@test.com");
+    cy.get(dataTestId("contactDetails_phoneNumber"))
+      .should("be.visible")
+      .type(phoneNumber || "0700000000");
+  }
+```
+
+When it does error, I can see that cypress has attempted to type the full string, but the value appears to be missing one of the characters typed in
+
+![Screenshot 2019-11-11 at 16 13 39](assets/cypress-io__cypress-9254/007.png)
+
+#### Comment at 2019-12-24T10:16:59Z
+
+![image](assets/cypress-io__cypress-9254/008.png)
+
+#### Comment at 2019-12-24T10:27:50Z
+
+![image](assets/cypress-io__cypress-9254/009.png)
+
+#### Comment at 2020-01-08T11:05:09Z
+
+@sharpboy2008 I can recreate your issue as described in 3.8.1 and it does look to be the same issue as the original one being opened. 
+
+I cannot recreate this issue in 3.7.0 actually - the test always passes. This makes me think this is slightly different in some way from the original issue.
+
+Sometimes only a few characters are typed, sometimes no characters - it changes depending on reload of tests (ctrl+r).
+
+## Test code
+
+```js
+it('types - char', () => {
+  cy.visit('https://law.wkinfo.com.cn/')
+  cy.contains('Login').click()
+  cy.get('#login-username').type('XXTEXXY.xxlpnc').should("have.value", 'XXTEXXY.xxlpnc')
+  cy.get('#login-password').type('wqswweewres88').should("have.value", 'wqswweewres88')
+})
+```
+
+## one test that only typed a few chars
+
+![Screen Shot 2020-01-08 at 5 25 34 PM](assets/cypress-io__cypress-9254/010.png)
+
+## corresponding events table
+
+![Screen Shot 2020-01-08 at 5 24 35 PM](assets/cypress-io__cypress-9254/011.png)
+
+@sharpboy2008 I would suggest rolling back to Cypress 3.7.0 in the meantime for your issue.
+
+#### Comment at 2020-03-25T15:09:56Z
+
+We migrated to cypress 4 and typing seems to work more reliably. 
+I still haven't managed to build a minimal example but discovered a case where cypress actually revealed a bug in the current setup. I have two instances of the same react component which update an external state `onBlur`.  I ran:
+```javascript
+cy.findByDisplayValue('[store_id]').type('{selectall}COUNT([store_id])')
+cy.findByDisplayValue('[revenue]').type('{selectall}SUM([revenue])', forceOption)
+```
+The first line outputs this to the console:
+![image](assets/cypress-io__cypress-9254/012.png)
+and the second one:
+![image](assets/cypress-io__cypress-9254/013.png)
+The first one behaves as expected while the second input is not updated at all, since it's apparently typing on the wrong element. 
+I figured that typing on the first second element actually triggered the onBlur on the first and changed it to manually trigger the `onBlur` (if anyone has a better idea than `cy.findByDisplayValue('COUNT([store_id])').focus().blur()` I'd be excited to hear it). And voila the second input types just as fine.
+
+I tested this behaviour manually and indeed if you type in the first input you need two clicks to be able to type in the second. Why exactly that happens, I am not sure but thought I'd share.
+
+#### Comment at 2020-05-08T00:20:21Z
+
+Hola comunidad, a mi me está ocurriendo el mismo problema que no terminar escribir una cadena de texto en la versión 4.5. Me está ocurriendo en este mismo momento. Al parecer no hay una solución, pero al menos aquí dejaré el caso. Un saludo. 
+
+![Captura de Pantalla 2020-05-07 a la(s) 7 19 20 p  m](assets/cypress-io__cypress-9254/014.png)
+
+#### Comment at 2020-05-22T05:50:02Z
+
+Using the GUI from `yarn cy:open` I ran through my spec 10 times. I got 4 passes with 6 failures on an email input `cy.get('input[name="email"]').type('developers@ethicaljobs.com.au');` which was typing an incomplete email and failing the validation. [pass, pass, fail, fail, fail, fail, fail, fail, pass, pass]
+
+In the attachment you can see the command next to the resulting form input.
+![Screen Shot 2020-05-22 at 3 38 29 pm](assets/cypress-io__cypress-9254/015.png)
+
+Using the cypress-file-upload plugin and running testing in Chrome 81.
+ 
+```
+"cypress": "^4.5.0",
+"cypress-file-upload": "^4.0.6",
+```
+
+I believe its a fairly vanilla install currently, this is the first test. I'll try and create a project from scratch to attempt to replicate.
+
+I'm interacting with an iframe directly before the email input
+
+```
+
+    cy.get('iframe[width=304]')
+      .then($iframe => {
+        const $body = $iframe.contents().find('body');
+        cy.wrap($body)
+          .find('.recaptcha-checkbox-border')
+          .should('be.visible')
+          .click();
+      });
+
+    cy.get('input[name="email"]').type('developers@ethicaljobs.com.au');
+    cy.get('input[name="firstName"]').type(name);
+    cy.get('input[name="lastName"]').type('testLname');
+    cy.get('input[name="phone"]').type('12344321');
+```
+
+The odd thing I find is cypress has proven to be reliable between async callbacks. Its such an odd thing for it to fail on.
+
+#### Comment at 2020-05-28T12:10:07Z
+
+Hi Team, I am able to reproduce the above mentioned issue with 4.7.0.
+Here is the code snippet:
+```js
+/// <reference types="Cypress" />
+describe("visit the link", function () {
+  it("visiting website", function () {
+    cy.visit("www.amazon.com");
+    cy.get("#twotabsearchtextbox").type("Mobile phone");
+    cy.get(".nav-search-submit .nav-input").click();
+  });
+});
+```
+![image](assets/cypress-io__cypress-9254/016.png)
+
+#### Comment at 2020-07-02T08:53:09Z
+
+I'm able to reproduce this given the example below. 
+
+```js
+it('test', () => {
+  cy.visit('www.amazon.com')
+  cy.get('#twotabsearchtextbox')
+    .type('Mobile phone')
+    .should('have.value', 'Mobile phone')
+})
+```
+
+This is happening because a 'toaster' pops up midway through typing (sometimes) on the site which takes focus away from the input during type. You can see where the type events are going for each keyboard event by clicking on the TYPE in the command log and opening the events table in your DevTools. 
+
+If your application calls focus away from the currently focused input during typing, this can cause this behavior. 
+
+![Screen Shot 2020-07-02 at 3 19 15 PM](assets/cypress-io__cypress-9254/017.png)
+
+#### Comment at 2020-07-03T16:50:53Z
+
+@jennifer-shehane The bug happens for me without the input losing focus when using react ionic's "ion-textarea" in cypress@4.9.0.  The text that ends up in the input is "Hy, how are you?" (missing the "e").
+
+![image](assets/cypress-io__cypress-9254/018.png)
+
+Adding a delay of 500ms before typing solves it, but I can't go this route in good conscience.
+
+EDIT
+
+I should mention adding a 500ms delay only solves it _most_ of the time.  It will still happen, making my tests undeterministic.
+
+#### Comment at 2020-07-13T14:17:01Z
+
+I could reproduce this issue in one of the text boxes
+
+![image](assets/cypress-io__cypress-9254/019.png)
+
+I have typed the input, assert for it and it fails.
+
+![image](assets/cypress-io__cypress-9254/020.png)
+
+Fyi, While typing, we fetch data from API.
+
+#### Comment at 2020-09-09T21:48:44Z
+
+Certainly seems like some sort of race condition. I've been trying for a few days, but can't reliably reproduce this. 
+
+We just experienced it the other day in a test and you can see in the image below the text should be `select {{snippet: foo}}`, but it ends up being `select {{snippet: f}}oo`. But then we rerun the test and it's fine. In every scenario we've experienced this, a rerun of the test *usually* works. 
+
+![image](assets/cypress-io__cypress-9254/021.png)
+
+I _think_ you should be able to see the [circleci runs](https://app.circleci.com/pipelines/github/metabase/metabase?branch=pull%2F13213) since it was on a public branch if that's at all helpful
+
+#### Comment at 2020-09-10T03:25:21Z
+
+Yes, after further examination our problem seems like a race condition.
+
+Vue is rendering the elements really fast, but in one case our DB call can
+be slow. BUT we started waiting on those routes - made it better, but still
+an issue.
+
+Now as far as we can tell sometimes Cypress grabs the element and starts
+typing after the API call ends, but before Vue can render the data in the
+field. And if the field is empty, apparently Vue *deletes what Cypress has
+typed so far*.
+
+In another case we have a button that appears to render before the js is
+bound to it- so the desired action does not occur when Cypress clicks it
+too quickly.
+
+Is there any way for Cypress to peer into the inner workings of something
+like Vue and wait until all of this js has loaded/finished executing?
+
+
+Stuart
+
+On Wednesday, September 9, 2020, Damon P. Cortesi <notifications@github.com>
+wrote:
+
+> Certainly seems like some sort of race condition. I've been trying for a
+> few days, but can't reliably reproduce this.
+>
+> We just experienced it the other day in a test and you can see in the
+> image below the text should be select {{snippet: foo}}, but it ends up
+> being select {{snippet: f}}oo. But then we rerun the test and it's fine.
+> In every scenario we've experienced this, a rerun of the test *usually*
+> works.
+>
+> [image: image]
+> <![Image](assets/cypress-io__cypress-9254/021.png)>
+>
+> I *think* you should be able to see the circleci runs
+> <https://app.circleci.com/pipelines/github/metabase/metabase?branch=pull%2F13213>
+> since it was on a public branch if that's at all helpful
+>
+> —
+> You are receiving this because you commented.
+> Reply to this email directly, view it on GitHub
+> <https://github.com/cypress-io/cypress/issues/5480#issuecomment-689839959>,
+> or unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AARORV4E3AAI47AIHC2SED3SE7Z4ZANCNFSM4JFJRB7Q>
+> .
+>
+
+#### Comment at 2020-09-18T23:23:03Z
+
+Yea @bahmutov very likely that's the case somewhere. I'm not yet sure if we can pull the widget out in an isolated fashion, but will probably poke more next week.
+
+For context, the input field is [TokenizedInput.jsx](https://github.com/metabase/metabase/blob/master/frontend/src/metabase/query_builder/components/expressions/TokenizedInput.jsx) inside [ExpressionEditorTextfield.jsx](https://github.com/metabase/metabase/blob/master/frontend/src/metabase/query_builder/components/expressions/ExpressionEditorTextfield.jsx) inside [ExpressionWidget.jsx](https://github.com/metabase/metabase/blob/master/frontend/src/metabase/query_builder/components/expressions/ExpressionWidget.jsx). So if something is going on, it's likely in one of those places. There is the "autocomplete" dropdown that shows up (see below) so my guess it's something to do with that. When we've run into this in other areas, it's been where some sort of autocomplete has popped up.
+
+![image](assets/cypress-io__cypress-9254/022.png)

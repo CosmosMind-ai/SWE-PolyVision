@@ -1,0 +1,17 @@
+{
+  "instance_id": "grommet__grommet-4402",
+  "repo": "grommet/grommet",
+  "base_commit": "b59cd644fd026d4d0befefe02f0b831d773bc4b8",
+  "environment_setup_commit": "b59cd644fd026d4d0befefe02f0b831d773bc4b8",
+  "created_at": "2020-08-11T15:33:09Z",
+  "version": "v2.15.0",
+  "image_count": 2,
+  "image_assets": {
+    "problem_statement": [
+      "assets/grommet__grommet-4402/001.png",
+      "assets/grommet__grommet-4402/002.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

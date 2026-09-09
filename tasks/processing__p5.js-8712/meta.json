@@ -1,0 +1,22 @@
+{
+  "instance_id": "processing__p5.js-8712",
+  "repo": "processing/p5.js",
+  "base_commit": "9206f8d542b248d767ecdc652a26de988926952c",
+  "environment_setup_commit": "9206f8d542b248d767ecdc652a26de988926952c",
+  "created_at": "2026-04-08T11:14:31Z",
+  "version": "v1.11.12",
+  "image_count": 7,
+  "image_assets": {
+    "problem_statement": [
+      "assets/processing__p5.js-8712/001.png",
+      "assets/processing__p5.js-8712/002.png",
+      "assets/processing__p5.js-8712/003.png",
+      "assets/processing__p5.js-8712/004.png",
+      "assets/processing__p5.js-8712/005.png",
+      "assets/processing__p5.js-8712/006.png",
+      "assets/processing__p5.js-8712/007.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

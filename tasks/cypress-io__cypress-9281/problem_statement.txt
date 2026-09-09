@@ -1,0 +1,177 @@
+Error during screenshot capture: RangeError: Index out of range | The value of "offset" is out of range.
+### Current behavior:
+Executing `cy.screenshot()` on large pages causes error.  Stack trace:
+
+```bash
+     RangeError: Index out of range
+      at checkInt (buffer.js:1180:11)
+      at Buffer.writeUInt32BE (buffer.js:1271:5)
+      at new Jimp (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/jimp/index.js:137:30)
+      at stitchScreenshots (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:199:17)
+      at /Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:295:21
+      at tryCatcher (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/util.js:16:23)
+      at Promise._settlePromiseFromHandler (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/promise.js:510:31)
+      at Promise._settlePromise (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/promise.js:567:18)
+      at Promise._settlePromise0 (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/promise.js:612:10)
+      at Promise._settlePromises (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/promise.js:691:18)
+      at Async._drainQueue (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/async.js:133:16)
+      at Async._drainQueues (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/async.js:143:10)
+      at Immediate.Async.drainQueues (/Users/rbayliss/Library/Caches/Cypress/3.0.1/Cypress.app/Contents/Resources/app/packages/server/node_modules/bluebird/js/release/async.js:17:14)
+      at runCallback (timers.js:781:20)
+      at tryOnImmediate (timers.js:743:5)
+      at processImmediate [as _immediateCallback] (timers.js:714:5)
+```
+<!-- images, stack traces, etc -->
+
+### Desired behavior:
+Screenshots are captured.
+
+### Steps to reproduce:
+Call `cy.screenshot()` on a page that exceeds 16,000,000 square pixels (in my case, the element is 1195px by 13518px).  Reproduction test case: https://github.com/rbayliss/cypress-test-tiny/tree/index_error
+
+<!-- Issues without reproducible steps might get closed. *Tip* You can fork https://github.com/cypress-io/cypress-test-tiny repo, set up a failing test, then tell us the repo/branch to try. -->
+
+### Versions
+
+```
+Cypress package version: 3.0.1
+Cypress binary version: 3.0.1
+Chrome 67.0.3396.87 on OSX 10.13
+```
+
+## Relevant pre-fix discussion
+
+### Issue #2034
+
+#### Comment at 2020-06-18T13:23:52Z
+
+Another reproducible example: https://github.com/masakudamatsu/line-height-picker/blob/visual-testing/cypress/e2e/visual-tests.js
+
+Cypress v4.8.0
+
+![Screen Shot 2020-06-18 at 9 23 42 AM](assets/cypress-io__cypress-9281/001.png)
+
+The element to be screenshotted has SVG inside
+
+![Screen Shot 2020-06-18 at 9 26 03 AM](assets/cypress-io__cypress-9281/002.png)
+
+![Screen Shot 2020-06-18 at 9 26 26 AM](assets/cypress-io__cypress-9281/003.png)
+
+Seems this only happens when there is vertical scroll necessary to get the full image, even if the element itself is small
+
+#### Comment at 2020-07-28T08:50:48Z
+
+Narrowed this issue down to a smaller repro so we don't have to rely on outside repos/URLs. This is reproducible outside of any snapshot plugins. 
+
+If I open the DevTools attached to the window then the test passes without this error which is super fun. 🤦 
+
+`index.html`
+
+```html
+<html>
+<body>
+  <svg width="778pt" height="308pt" style="background-color: green;"></svg>
+  <svg id="blue" width="778pt" height="308pt" style="background-color: blue;"></svg>
+  <div style="height: 300px; background-color: red;"></div>
+</body>
+</html>
+```
+
+`spec.js`
+
+```js
+it('works', () => {
+  cy.visit('index.html')
+  cy.get('#blue').screenshot()
+})
+```
+
+```
+RangeError: The value of "offset" is out of range. It must be >= 0 and <= 20553340. Received -11304
+    at boundsError (internal/buffer.js:72:9)
+    at Buffer.readUInt32BE (internal/buffer.js:295:5)
+    at Jimp.<anonymous> (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/plugin-crop/dist/index.js:43:37)
+    at scan (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/utils/dist/index.js:53:9)
+    at Jimp.scanQuiet (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/core/dist/index.js:1262:32)
+    at Jimp.cropQuiet (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/plugin-crop/dist/index.js:42:12)
+    at Jimp.<computed> [as crop] (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/node_modules/@jimp/core/dist/index.js:1176:23)
+    at crop (/Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:161:24)
+    at /Users/jennifer/Library/Caches/Cypress/4.11.0/Cypress.app/Contents/Resources/app/packages/server/lib/screenshots.js:435:17
+    at processImmediate (internal/timers.js:439:21)
+From previous event:
+    at $Cypress.automation (http://localhost:51135/__cypress/runner/cypress_runner.js:164254:14)
+    at automate (http://localhost:51135/__cypress/runner/cypress_runner.js:157822:20)
+    at automateScreenshot (http://localhost:51135/__cypress/runner/cypress_runner.js:157832:10)
+    at scrollAndTake (http://localhost:51135/__cypress/runner/cypress_runner.js:157901:12)
+From previous event:
+    at takeScrollingScreenshots (http://localhost:51135/__cypress/runner/cypress_runner.js:157904:18)
+    at takeElementScreenshot (http://localhost:51135/__cypress/runner/cypress_runner.js:158019:10)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:158123:14
+From previous event:
+    at takeScreenshot (http://localhost:51135/__cypress/runner/cypress_runner.js:158115:19)
+    at Context.screenshot (http://localhost:51135/__cypress/runner/cypress_runner.js:158229:14)
+    at Context.<anonymous> (http://localhost:51135/__cypress/runner/cypress_runner.js:167810:21)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:167243:15
+From previous event:
+    at runCommand (http://localhost:51135/__cypress/runner/cypress_runner.js:167222:8)
+    at next (http://localhost:51135/__cypress/runner/cypress_runner.js:167368:14)
+From previous event:
+    at next (http://localhost:51135/__cypress/runner/cypress_runner.js:167368:34)
+From previous event:
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:167409:37
+From previous event:
+    at run (http://localhost:51135/__cypress/runner/cypress_runner.js:167402:19)
+    at $Cy.cy.<computed> [as visit] (http://localhost:51135/__cypress/runner/cypress_runner.js:167854:11)
+    at Context.runnable.fn (http://localhost:51135/__cypress/runner/cypress_runner.js:168079:21)
+    at callFn (http://localhost:51135/__cypress/runner/cypress_runner.js:103224:21)
+    at Test.../driver/node_modules/mocha/lib/runnable.js.Runnable.run (http://localhost:51135/__cypress/runner/cypress_runner.js:103211:7)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:173313:28
+From previous event:
+    at Object.onRunnableRun (http://localhost:51135/__cypress/runner/cypress_runner.js:173301:20)
+    at $Cypress.action (http://localhost:51135/__cypress/runner/cypress_runner.js:164070:61)
+    at Test.Runnable.run (http://localhost:51135/__cypress/runner/cypress_runner.js:171914:13)
+    at Runner.../driver/node_modules/mocha/lib/runner.js.Runner.runTest (http://localhost:51135/__cypress/runner/cypress_runner.js:103883:10)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:104009:12
+    at next (http://localhost:51135/__cypress/runner/cypress_runner.js:103792:14)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:103802:7
+    at next (http://localhost:51135/__cypress/runner/cypress_runner.js:103704:14)
+    at http://localhost:51135/__cypress/runner/cypress_runner.js:103770:5
+    at timeslice (http://localhost:51135/__cypress/runner/cypress_runner.js:97696:27)
+```
+
+![Screen Shot 2020-07-28 at 3 15 20 PM](assets/cypress-io__cypress-9281/004.png)
+
+`DEBUG=cypress:server:screenshot` logs
+
+
+```
+  cypress:server:screenshot (s4) capturing screenshot { titles: [ 'works' ], testId: 'r2', capture: 'viewport', clip: { x: 8, y: -0.34375, width: 992, height: 410.65625 }, viewport: { width: 1025, height: 894 }, scaled: false, blackout: [], startTime: '2020-07-28T09:06:53.193Z', current: 1, total: 1, specName: 'spec.js' } +0ms
+  cypress:server:screenshot (s4) capture and check { tries: 1, totalDuration: 0 } +2ms
+  cypress:server:screenshot (s4) received screenshot data from automation layer data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACAIAAAb8CAYAAACEPaEyAAABKWlDQ1BTa2lhAAAokX2RP0jDQBTGfx +416ms
+  cypress:server:screenshot (s4) read buffer to image 2050 x 1788 +200ms
+  cypress:server:screenshot (s4) helper pixels
+  cypress:server:screenshot  {
+  cypress:server:screenshot   topLeft: { r: 255, g: 255, b: 255, a: 255, isNotWhite: false },
+  cypress:server:screenshot   topLeftRight: { r: 255, g: 255, b: 255, a: 255, isWhite: true },
+  cypress:server:screenshot   topLeftDown: { r: 255, g: 255, b: 255, a: 255, isWhite: true },
+  cypress:server:screenshot   bottomLeft: { r: 255, g: 255, b: 255, a: 255, isWhite: true },
+  cypress:server:screenshot   topRight: { r: 255, g: 255, b: 255, a: 255, isWhite: true },
+  cypress:server:screenshot   bottomRight: { r: 255, g: 255, b: 255, a: 255, isBlack: false }
+  cypress:server:screenshot } +0ms
+  cypress:server:screenshot (s4) pixelConditionFn { pixelRatio: 2, subject: 'app', hasPixels: false, expectedPixels: false } +1ms
+  cypress:server:screenshot (s4) no previous image to compare +0ms
+  cypress:server:screenshot (s4) resolving with image { tries: 1, totalDuration: 0 } +0ms
+  cypress:server:screenshot (s4) pixel ratio is 2 +0ms
+  cypress:server:screenshot (s4) multi-part 1/1 +0ms
+  cypress:server:screenshot (s4) dimensions before are { x: 8, y: -0.34375, width: 992, height: 410.65625 } +0ms
+  cypress:server:screenshot (s4) dimensions for cropping are { x: 16, y: -0.6875, width: 1984, height: 821.3125 } +0ms
+  cypress:server:screenshot (s4) crop: from 16, -0.6875 +1ms
+  cypress:server:screenshot (s4)         to 1984 x 821.3125 +0ms
+  cypress:server:screenshot (s4) clearing 0 cached multipart images +9ms
+```
+
+#### Comment at 2020-10-14T08:11:22Z
+
+This bug is really coming in the way of my success with visual testing with Cypress(cypress-image-snapshot/plugin). I get the out of range error only when I run with headless chrome, inside a container! I setup the viewport to (1600,900) in cypress.json. Dont use cy.viewport() anywhere in the test. I get the snapshots with cy.matchImageSnapshot() for the test- locally, in both headed and headless chrome. Also headless, locally. But not on headless-inside container!
+![image](assets/cypress-io__cypress-9281/005.png)
+I am on 3.8.3

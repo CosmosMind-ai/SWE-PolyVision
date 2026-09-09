@@ -1,0 +1,54 @@
+Missing data if the distinct count is failing
+### Describe the Bug
+
+The collection page will not show any data if the distinct count (its result shown at the top right corner of the page) is not loaded in. If the distinct count fails, it won't show the data at all.
+
+![Image](assets/directus__directus-26045/001.png)
+
+I would consider the `x-y of z` visual a _nice to have_, but not critical for it to block the data visualisation all together.  For larger datasets, this feature keeps most collections empty for longer than needed, given that the actual query for the data itself is faster than the distinct count.
+
+### To Reproduce
+
+Create a large table if 1M entries. Open the collection through the CMS and observe the load times.
+
+To 'break' the distinct count query can be a bit harder. Either reduce the performance of the database, or increase the number of entries.
+
+### Directus Version
+
+v11.6.1
+
+### Hosting Strategy
+
+Self-Hosted (Docker Image)
+
+### Database
+
+PostgreSQL 15.13
+
+## Relevant pre-fix discussion
+
+### Issue #25984
+
+#### Comment at 2025-10-18T21:49:52Z
+
+Here are some additional screenshots of the issue: the page fails to display the data, even though it has been successfully retrieved via the corresponding API call.
+
+![Image](assets/directus__directus-26045/002.jpg)
+![Image](assets/directus__directus-26045/003.jpg)
+
+#### Comment at 2025-10-21T14:25:43Z
+
+I've setup the staging environment with all extensions and flows removed. I also had the opportunity to manually vacuum the table. The latter reduced the loading time for the distinct count (which was needed anyways).
+
+![Image](assets/directus__directus-26045/004.png)
+
+In regards to the data visualisation, the following steps occurred:
+
+time (s) | data shown | `x-y of z items` shown
+--- | --- | ---
+0.0 | ❌ | ❌ 
+0.045 | ❌ | ❌
+1.9 | ✔️ | ❌
+3.88 | ✔️ | ✔️
+
+Here $`3.88 \approx 2(1.9 - 0.045)`$, which questions; why do we need the distinct count twice?

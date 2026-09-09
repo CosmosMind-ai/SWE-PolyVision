@@ -1,0 +1,80 @@
+Some components don't render the passed id prop
+## 🐛 Bug report
+
+### Current behavior
+
+I used the codesandbox link from https://github.com/reakit/reakit/blob/master/README.md and tested a situation i discovered when using the `id` attribute in combination with components that use the `Hidden` component.
+
+The moment i declare an `id`, it failes to render.
+
+### Steps to reproduce the bug
+
+Provide a repo or sandbox with the bug and describe the steps to reproduce it.
+
+1. Open sandbox: https://codesandbox.io/s/crazy-curran-2x3wc (you can use it as a base)
+2. remove/add the `id` attribute for `Hidden` or any other component depending on it.
+3. See console logs
+
+### Expected behavior
+
+Should render without failure.
+
+### Possible solutions
+
+I currently do not have an propper understanding of the new `Id` component and how it works to so
+i cannot give a possible solution.
+
+### Environment
+
+Please, run the command below inside your project directory.
+```sh
+$ npx envinfo --system --binaries --browsers --npmPackages "{react*,reakit*}"
+
+  System:
+    OS: Linux 4.18 Ubuntu 18.10 (Cosmic Cuttlefish)
+    CPU: (8) x64 Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+    Memory: 796.86 MB / 15.32 GB
+    Container: Yes
+    Shell: 4.4.19 - /bin/bash
+  Binaries:
+    Node: 12.10.0 - ~/.asdf/installs/nodejs/12.10.0/bin/node
+    Yarn: 1.19.0 - ~/.asdf/installs/nodejs/12.10.0/.npm/bin/yarn
+    npm: 6.10.3 - ~/.asdf/installs/nodejs/12.10.0/bin/npm
+  Browsers:
+    Chrome: 78.0.3904.97
+    Firefox: 68.0
+  npmPackages:
+    react: ^16.8.6 => 16.9.0 
+    react-benchmark: ^2.1.0 => 2.1.1 
+    react-docgen: ^4.1.1 => 4.1.1 
+    react-dom: ^16.8.6 => 16.9.0 
+    react-is: ^16.8.1 => 16.9.0 
+    react-known-props: ^2.4.2 => 2.4.4 
+    react-test-renderer: ^16.11.0 => 16.11.0 
+    react-window: ^1.8.1 => 1.8.5 
+    reakit: https://pkg.csb.dev/reakit/reakit/commit/35fb93af/reakit => 1.0.0-beta.13 
+    reakit-utils: 0.7.2 => 0.7.2 
+
+
+```
+
+## Relevant pre-fix discussion
+
+### Issue #518
+
+#### Comment at 2019-12-17T10:14:31Z
+
+Hi @namjul! I can't reproduce it. If I set `id="test"` on `Dialog`, it properly renders the component with the correct id.
+![image](assets/ariakit__ariakit-520/001.png)
+
+#### Comment at 2019-12-17T13:46:32Z
+
+Thanks for the reproduction! The problem there is that you're setting an invalid id (`123`). IDs can't start with numbers.
+
+The code is throwing on this line:
+https://github.com/reakit/reakit/blob/d5e1e8f070c435acdbab92a95a938be23e5803ae/packages/reakit/src/Hidden/__utils/useWarningIfMultiple.ts#L12
+
+This will throw on any website:
+![image](assets/ariakit__ariakit-520/002.png)
+
+We could avoid throwing that by wrapping that part of the code within `try`/`catch`.

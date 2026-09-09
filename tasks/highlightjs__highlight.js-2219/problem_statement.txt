@@ -1,0 +1,48 @@
+(fortran) number before underscore disappears
+If an underscore follows a number in formatted Fortran code, the number disappears. The code
+````
+e = init_pair(1_c_short, COLOR_YELLOW, COLOR_BLACK)
+````
+will be shown as
+````
+e = init_pair(_c_short, COLOR_YELLOW, COLOR_BLACK)
+````
+
+## Relevant pre-fix discussion
+
+### Issue #1566
+
+#### Comment at 2019-10-07T17:48:58Z
+
+@yyyc514 Still an issue with v9.15.10. https://jsfiddle.net/94qdb70x/
+
+![image](assets/highlightjs__highlight.js-2219/001.png)
+
+Also, it seems like the first digit of the number before the underscore is disappearing.
+
+```
+4_ikind
+35_ikind
+```
+becomes
+```
+_ikind
+5_ikind
+```
+
+#### Comment at 2019-10-09T11:38:04Z
+
+I think the following would be better, but not 100% sure:
+
+```
+(?=\b|\+|\-|\.)
+(\d*\.\d*|\d+\.|\d+)
+([de][+-]?\d+)?
+(_[a-z_]+)?
+\b\.?
+```
+
+![Screen Shot 2019-10-09 at 7 37 47 AM](assets/highlightjs__highlight.js-2219/002.png)
+
+
+Thoughts?

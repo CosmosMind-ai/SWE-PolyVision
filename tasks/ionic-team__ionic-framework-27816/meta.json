@@ -1,0 +1,21 @@
+{
+  "instance_id": "ionic-team__ionic-framework-27816",
+  "repo": "ionic-team/ionic-framework",
+  "base_commit": "aa9ea60357c369452bc121c0d663be7dbf3da28e",
+  "environment_setup_commit": "aa9ea60357c369452bc121c0d663be7dbf3da28e",
+  "created_at": "",
+  "version": "",
+  "image_count": 6,
+  "image_assets": {
+    "problem_statement": [
+      "assets/ionic-team__ionic-framework-27816/001.png",
+      "assets/ionic-team__ionic-framework-27816/002.png",
+      "assets/ionic-team__ionic-framework-27816/003.png",
+      "assets/ionic-team__ionic-framework-27816/004.png",
+      "assets/ionic-team__ionic-framework-27816/005.jpg",
+      "assets/ionic-team__ionic-framework-27816/006.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}

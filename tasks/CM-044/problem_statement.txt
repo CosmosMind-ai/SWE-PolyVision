@@ -1,5 +1,0 @@
-`dashboardNewLayouts` scroll bugs
-`dashboardNewLayouts` moves the scroll container from the body to an inner element. this:
-- breaks keyboard scrolling (up/down arrow to scroll page)
-- breaks full page screenshots
-- prevents the url bar hiding on mobile browsers

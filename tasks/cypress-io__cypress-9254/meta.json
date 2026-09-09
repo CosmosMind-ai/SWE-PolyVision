@@ -1,0 +1,37 @@
+{
+  "instance_id": "cypress-io__cypress-9254",
+  "repo": "cypress-io/cypress",
+  "base_commit": "40dd31102c686ad89da1153f7abb7b41b8595e29",
+  "environment_setup_commit": "40dd31102c686ad89da1153f7abb7b41b8595e29",
+  "created_at": "",
+  "version": "",
+  "image_count": 22,
+  "image_assets": {
+    "problem_statement": [
+      "assets/cypress-io__cypress-9254/001.png",
+      "assets/cypress-io__cypress-9254/002.png",
+      "assets/cypress-io__cypress-9254/003.png",
+      "assets/cypress-io__cypress-9254/004.png",
+      "assets/cypress-io__cypress-9254/005.png",
+      "assets/cypress-io__cypress-9254/006.png",
+      "assets/cypress-io__cypress-9254/007.png",
+      "assets/cypress-io__cypress-9254/008.png",
+      "assets/cypress-io__cypress-9254/009.png",
+      "assets/cypress-io__cypress-9254/010.png",
+      "assets/cypress-io__cypress-9254/011.png",
+      "assets/cypress-io__cypress-9254/012.png",
+      "assets/cypress-io__cypress-9254/013.png",
+      "assets/cypress-io__cypress-9254/014.png",
+      "assets/cypress-io__cypress-9254/015.png",
+      "assets/cypress-io__cypress-9254/016.png",
+      "assets/cypress-io__cypress-9254/017.png",
+      "assets/cypress-io__cypress-9254/018.png",
+      "assets/cypress-io__cypress-9254/019.png",
+      "assets/cypress-io__cypress-9254/020.png",
+      "assets/cypress-io__cypress-9254/021.png",
+      "assets/cypress-io__cypress-9254/022.png"
+    ],
+    "patch": [],
+    "test_patch": []
+  }
+}
